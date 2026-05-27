@@ -86,7 +86,6 @@ body {
 .panel { display: none; padding: 16px; }
 .panel.active { display: block; }
 
-/* 로딩 */
 .loading-overlay {
   position: fixed; inset: 0;
   background: rgba(247,246,243,0.85);
@@ -349,12 +348,61 @@ body {
 .today-hero-info h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 .today-hero-info p { font-size: 12px; color: var(--text2); line-height: 1.5; }
 
-/* 동기화 상태 */
 .sync-bar { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text3); padding: 6px 0 2px; }
 .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
 .sync-dot.syncing { background: var(--warning); animation: pulse 1s infinite; }
 .sync-dot.error { background: var(--danger); }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ── 기출 분석 탭 스타일 ── */
+.analysis-subject-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.analysis-subject-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+.analysis-subject-title { font-size: 14px; font-weight: 700; }
+.analysis-subject-meta { font-size: 11px; color: var(--text3); }
+.analysis-chevron { font-size: 12px; color: var(--text3); transition: transform 0.2s; }
+.analysis-chevron.open { transform: rotate(180deg); }
+.analysis-body { display: none; padding: 0 16px 14px; border-top: 1px solid var(--border); }
+.analysis-body.open { display: block; }
+
+.analysis-section-title {
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin: 12px 0 8px;
+}
+.analysis-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 4px; }
+.analysis-table th {
+  background: #f0ede8; text-align: left;
+  padding: 6px 8px; font-size: 11px;
+  color: var(--text2); font-weight: 600;
+  border-bottom: 1px solid var(--border2);
+}
+.analysis-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.analysis-table tr:last-child td { border-bottom: none; }
+.analysis-table tr:nth-child(even) td { background: #fafafa; }
+
+.freq-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+.freq-row:last-child { border-bottom: none; }
+.freq-name { flex: 1; min-width: 0; }
+.freq-stars { color: #f59e0b; font-size: 11px; flex-shrink: 0; }
+.freq-count { font-size: 11px; color: var(--text3); flex-shrink: 0; font-family: 'DM Mono', monospace; }
+
+.pattern-item { padding: 8px 10px; border-radius: var(--radius-xs); background: #f0fdf4; border-left: 3px solid var(--success); margin-bottom: 6px; font-size: 12px; line-height: 1.6; }
+.pattern-num { font-weight: 700; color: var(--success); margin-right: 4px; }
+.pattern-title { font-weight: 600; color: var(--text); }
+.pattern-desc { color: var(--text2); margin-top: 2px; }
+.pattern-year { font-size: 11px; color: var(--text3); margin-top: 2px; font-family: 'DM Mono', monospace; }
 </style>
 </head>
 <body>
@@ -381,6 +429,7 @@ body {
 <div id="panel-today" class="panel active"></div>
 <div id="panel-subjects" class="panel"></div>
 <div id="panel-review" class="panel"></div>
+<div id="panel-analysis" class="panel"></div>
 <div id="panel-record" class="panel"></div>
 
 <nav class="tab-nav">
@@ -395,6 +444,10 @@ body {
   <button class="tab-btn" onclick="switchTab('review',this)" aria-label="복습">
     <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
     복습
+  </button>
+  <button class="tab-btn" onclick="switchTab('analysis',this)" aria-label="기출분석">
+    <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    기출분석
   </button>
   <button class="tab-btn" onclick="switchTab('record',this)" aria-label="기록">
     <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -443,28 +496,44 @@ body {
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbyFZRi_ix0ys4pBMez8B9Q1STkB9hpAo2H8qg3XuWOhousMeTH6y4RgLpzDypBQnlE74w/exec';
+// ── API URL (새로 배포된 URL) ──
+const API_URL = 'https://script.google.com/macros/s/AKfycbwiEEcMuGjTv5O3gAgKF9ZtK63pV7BCaDJSslRxadyTuHJqParHd0eXl_BXWXS8ZTEcFQ/exec';
 
 const SUBJECTS = [
-  {id:'edu', name:'교육학'},
-  {id:'mtheory', name:'수학교육론'},
+  {id:'edu',      name:'교육학'},
+  {id:'mtheory',  name:'수학교육론'},
   {id:'analysis', name:'해석학'},
   {id:'topology', name:'위상수학'},
-  {id:'algebra', name:'현대대수학'},
-  {id:'linear', name:'선형대수학'},
-  {id:'diffgeo', name:'미분기하학'},
-  {id:'numtheory', name:'정수론'},
+  {id:'algebra',  name:'현대대수학'},
+  {id:'linear',   name:'선형대수학'},
+  {id:'diffgeo',  name:'미분기하학'},
+  {id:'numtheory',name:'정수론'},
   {id:'discrete', name:'이산수학'},
-  {id:'prob', name:'확률과 통계'},
-  {id:'complex', name:'복소해석학'},
+  {id:'prob',     name:'확률과 통계'},
+  {id:'complex',  name:'복소해석학'},
   {id:'calculus', name:'미분적분학'},
 ];
 
+// ── 기출 분석 데이터 (구글 시트 탭명 매핑) ──
+const ANALYSIS_SUBJECTS = [
+  { name:'해석학',     sheetName:'해석학'    },
+  { name:'위상수학',   sheetName:'위상수학'  },
+  { name:'현대대수학', sheetName:'현대대수학'},
+  { name:'미적분학',   sheetName:'미적분학'  },
+  { name:'미분기하학', sheetName:'미분기하학'},
+  { name:'정수론',     sheetName:'정수론'    },
+  { name:'복소해석학', sheetName:'복소해석학'},
+  { name:'선형대수',   sheetName:'선형대수'  },
+  { name:'이산수학',   sheetName:'이산수학'  },
+  { name:'확률과통계', sheetName:'확률과통계'},
+];
+
 const REVIEW_INTERVALS = [1,3,7,14,30,60];
-const INTERVAL_LABELS = ['1일','3일','7일','14일','30일','60일'];
+const INTERVAL_LABELS  = ['1일','3일','7일','14일','30일','60일'];
 const EXAM_DATE = new Date('2025-11-28');
 
 let state = { units: [], records: [] };
+let analysisCache = {};
 let currentTab = 'today';
 
 // ── 유틸 ──
@@ -476,7 +545,7 @@ function subjectName(sid){ return (SUBJECTS.find(s=>s.id===sid)||{name:'?'}).nam
 function setSyncStatus(status, msg){
   const dot = document.getElementById('sync-dot');
   const txt = document.getElementById('sync-status');
-  dot.className = 'sync-dot' + (status==='syncing'?' syncing':status==='error'?' error':'');
+  dot.className = 'sync-dot'+(status==='syncing'?' syncing':status==='error'?' error':'');
   txt.textContent = msg;
 }
 
@@ -485,95 +554,82 @@ async function apiGet(action){
   const res = await fetch(`${API_URL}?action=${action}`);
   return await res.json();
 }
-
 async function apiPost(body){
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify(body)
-  });
+  const res = await fetch(API_URL,{ method:'POST', body:JSON.stringify(body) });
   return await res.json();
 }
 
 function parseUnits(rows){
-  if(!rows || rows.length < 2) return [];
+  if(!rows||rows.length<2) return [];
   return rows.slice(1).filter(r=>r[0]).map(r=>({
-    id: Number(r[0]),
-    sid: String(r[1]),
-    name: String(r[2]),
-    date: String(r[3]),
-    reviews: [r[4],r[5],r[6],r[7],r[8],r[9]].map(v=>v===true||v==='TRUE'||v===1)
+    id:Number(r[0]), sid:String(r[1]), name:String(r[2]), date:String(r[3]),
+    reviews:[r[4],r[5],r[6],r[7],r[8],r[9]].map(v=>v===true||v==='TRUE'||v===1)
   }));
 }
-
 function parseRecords(rows){
-  if(!rows || rows.length < 2) return [];
+  if(!rows||rows.length<2) return [];
   return rows.slice(1).filter(r=>r[0]).map(r=>({
-    id: Number(r[0]),
-    sid: String(r[1]),
-    unitName: String(r[2]||''),
-    date: String(r[3]),
-    source: String(r[4]||''),
-    correct: Number(r[5]||0),
-    total: Number(r[6]||0),
-    memo: String(r[7]||'')
+    id:Number(r[0]), sid:String(r[1]), unitName:String(r[2]||''),
+    date:String(r[3]), source:String(r[4]||''),
+    correct:Number(r[5]||0), total:Number(r[6]||0), memo:String(r[7]||'')
   }));
 }
 
 async function loadData(){
   try {
-    setSyncStatus('syncing', '데이터 불러오는 중...');
-    const [uRows, rRows] = await Promise.all([apiGet('getUnits'), apiGet('getRecords')]);
-    state.units = parseUnits(uRows);
+    setSyncStatus('syncing','데이터 불러오는 중...');
+    const [uRows,rRows] = await Promise.all([apiGet('getUnits'),apiGet('getRecords')]);
+    state.units   = parseUnits(uRows);
     state.records = parseRecords(rRows);
-    setSyncStatus('ok', `마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-    document.getElementById('loading-overlay').style.display = 'none';
+    setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
+    document.getElementById('loading-overlay').style.display='none';
     renderAll();
-  } catch(e) {
-    setSyncStatus('error', '데이터 로드 실패 — 새로고침 해주세요');
-    document.getElementById('loading-overlay').style.display = 'none';
+  } catch(e){
+    setSyncStatus('error','데이터 로드 실패 — 새로고침 해주세요');
+    document.getElementById('loading-overlay').style.display='none';
     renderAll();
   }
 }
 
 // ── 헤더 ──
 function renderHeader(){
-  const now = new Date();
-  const diff = Math.ceil((EXAM_DATE - now) / 86400000);
-  document.getElementById('dday').textContent = diff > 0 ? `D-${diff}` : 'D-Day!';
-  const totalDays = Math.ceil((EXAM_DATE - new Date('2025-06-01')) / 86400000);
-  const passed = totalDays - diff;
-  const pct = Math.min(100, Math.max(0, Math.round(passed/totalDays*100)));
-  document.getElementById('overall-progress').style.width = pct+'%';
+  const now=new Date();
+  const diff=Math.ceil((EXAM_DATE-now)/86400000);
+  document.getElementById('dday').textContent=diff>0?`D-${diff}`:'D-Day!';
+  const totalDays=Math.ceil((EXAM_DATE-new Date('2025-06-01'))/86400000);
+  const passed=totalDays-diff;
+  const pct=Math.min(100,Math.max(0,Math.round(passed/totalDays*100)));
+  document.getElementById('overall-progress').style.width=pct+'%';
 }
 
-function switchTab(name, btn){
+function switchTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   btn.classList.add('active');
-  currentTab = name;
+  currentTab=name;
   renders[name]();
 }
 
 // ── 오늘 ──
 function renderToday(){
-  const td = today();
-  const items = [];
+  const td=today();
+  const items=[];
   state.units.forEach(u=>{
     REVIEW_INTERVALS.forEach((interval,idx)=>{
-      const due = addDays(u.date, interval);
-      if(!u.reviews[idx] && due <= td)
-        items.push({unit:u, idx, due, overdue: due < td});
+      const due=addDays(u.date,interval);
+      if(!u.reviews[idx]&&due<=td)
+        items.push({unit:u,idx,due,overdue:due<td});
     });
   });
-  const todayCnt = items.filter(i=>!i.overdue).length;
-  const overdueCnt = items.filter(i=>i.overdue).length;
-  const doneCnt = state.units.reduce((a,u)=>a+u.reviews.filter(Boolean).length,0);
-  const totalItems = state.units.length * REVIEW_INTERVALS.length;
-  const pct = totalItems > 0 ? Math.round(doneCnt/totalItems*100) : 0;
-  const r=26, circ=2*Math.PI*r, offset=circ-(pct/100)*circ;
+  const todayCnt=items.filter(i=>!i.overdue).length;
+  const overdueCnt=items.filter(i=>i.overdue).length;
+  const doneCnt=state.units.reduce((a,u)=>a+u.reviews.filter(Boolean).length,0);
+  const totalItems=state.units.length*REVIEW_INTERVALS.length;
+  const pct=totalItems>0?Math.round(doneCnt/totalItems*100):0;
+  const r=26,circ=2*Math.PI*r,offset=circ-(pct/100)*circ;
 
-  let html = `
+  let html=`
   <div class="today-hero">
     <svg class="ring-svg" viewBox="0 0 64 64">
       <circle class="ring-bg" cx="32" cy="32" r="${r}"/>
@@ -592,25 +648,21 @@ function renderToday(){
   </div>`;
 
   if(!items.length){
-    html += `<div class="section-title">오늘 할 일</div><div class="empty-state">오늘 복습할 항목이 없어요 ✓<br><small>단원을 추가하면 자동으로 생성돼요</small></div>`;
+    html+=`<div class="section-title">오늘 할 일</div><div class="empty-state">오늘 복습할 항목이 없어요 ✓<br><small>단원을 추가하면 자동으로 생성돼요</small></div>`;
   } else {
-    if(overdueCnt > 0){
-      html += `<div class="section-title" style="color:var(--danger)">밀린 복습 ${overdueCnt}개</div>`;
-      items.filter(i=>i.overdue).forEach(item=>{
-        html += todayItemHTML(item, `${daysDiff(item.due,td)}일 밀림`, 'badge-red');
-      });
+    if(overdueCnt>0){
+      html+=`<div class="section-title" style="color:var(--danger)">밀린 복습 ${overdueCnt}개</div>`;
+      items.filter(i=>i.overdue).forEach(item=>{ html+=todayItemHTML(item,`${daysDiff(item.due,td)}일 밀림`,'badge-red'); });
     }
-    if(todayCnt > 0){
-      html += `<div class="section-title" style="margin-top:${overdueCnt>0?'16px':'0'}">오늘 복습 ${todayCnt}개</div>`;
-      items.filter(i=>!i.overdue).forEach(item=>{
-        html += todayItemHTML(item, INTERVAL_LABELS[item.idx]+' 복습', 'badge-blue');
-      });
+    if(todayCnt>0){
+      html+=`<div class="section-title" style="margin-top:${overdueCnt>0?'16px':'0'}">오늘 복습 ${todayCnt}개</div>`;
+      items.filter(i=>!i.overdue).forEach(item=>{ html+=todayItemHTML(item,INTERVAL_LABELS[item.idx]+' 복습','badge-blue'); });
     }
   }
-  document.getElementById('panel-today').innerHTML = html;
+  document.getElementById('panel-today').innerHTML=html;
 }
 
-function todayItemHTML(item, badgeText, badgeClass){
+function todayItemHTML(item,badgeText,badgeClass){
   return `<div class="today-item" id="ti-${item.unit.id}-${item.idx}">
     <button class="check-btn" onclick="checkItem(${item.unit.id},${item.idx})">
       <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -623,31 +675,26 @@ function todayItemHTML(item, badgeText, badgeClass){
   </div>`;
 }
 
-async function checkItem(uid, idx){
-  const u = state.units.find(u=>u.id===uid);
-  if(!u) return;
-  const el = document.getElementById(`ti-${uid}-${idx}`);
+async function checkItem(uid,idx){
+  const u=state.units.find(u=>u.id===uid); if(!u) return;
+  const el=document.getElementById(`ti-${uid}-${idx}`);
   if(el){ el.classList.add('done-anim'); el.querySelector('.check-btn').classList.add('checked'); }
-  u.reviews[idx] = true;
+  u.reviews[idx]=true;
   renderHeader();
-  setSyncStatus('syncing', '저장 중...');
-  try {
-    await apiPost({action:'saveUnit', unit:u});
-    setSyncStatus('ok', `마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e) { setSyncStatus('error', '저장 실패'); }
-  setTimeout(()=>renderToday(), 400);
+  setSyncStatus('syncing','저장 중...');
+  try { await apiPost({action:'saveUnit',unit:u}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','저장 실패'); }
+  setTimeout(()=>renderToday(),400);
 }
 
 // ── 과목 ──
 function renderSubjects(){
-  let html = `
+  let html=`
   <div class="add-card">
     <h3>단원 추가</h3>
     <div class="form-group">
       <label class="form-label">과목</label>
-      <select class="form-select" id="sel-subj">
-        ${SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}
-      </select>
+      <select class="form-select" id="sel-subj">${SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
     </div>
     <div class="form-group">
       <label class="form-label">단원명</label>
@@ -660,20 +707,19 @@ function renderSubjects(){
     <button class="btn-primary" id="add-unit-btn" onclick="addUnit()">추가하기</button>
   </div>`;
 
-  const grouped = {};
+  const grouped={};
   state.units.forEach(u=>{ if(!grouped[u.sid]) grouped[u.sid]=[]; grouped[u.sid].push(u); });
   SUBJECTS.forEach(s=>{
-    const units = grouped[s.id]||[];
-    if(!units.length) return;
-    html += `<div class="subject-section">
+    const units=grouped[s.id]||[]; if(!units.length) return;
+    html+=`<div class="subject-section">
       <div class="subject-header">
         <span class="subject-name-label">${s.name}</span>
         <span class="subject-count">${units.length}단원</span>
       </div>`;
     units.forEach(u=>{
-      const done = u.reviews.filter(Boolean).length;
-      const pct = Math.round(done/REVIEW_INTERVALS.length*100);
-      html += `<div class="unit-item">
+      const done=u.reviews.filter(Boolean).length;
+      const pct=Math.round(done/REVIEW_INTERVALS.length*100);
+      html+=`<div class="unit-item">
         <div class="unit-item-info">
           <div class="unit-item-name">${u.name}</div>
           <div class="unit-item-date">${u.date} 학습</div>
@@ -687,74 +733,65 @@ function renderSubjects(){
         </button>
       </div>`;
     });
-    html += `</div>`;
+    html+=`</div>`;
   });
-
-  if(!state.units.length)
-    html += `<div class="empty-state">아직 등록된 단원이 없어요<br><small>위에서 과목과 단원명을 입력해보세요</small></div>`;
-
-  document.getElementById('panel-subjects').innerHTML = html;
+  if(!state.units.length) html+=`<div class="empty-state">아직 등록된 단원이 없어요<br><small>위에서 과목과 단원명을 입력해보세요</small></div>`;
+  document.getElementById('panel-subjects').innerHTML=html;
 }
 
 async function addUnit(){
-  const sid = document.getElementById('sel-subj').value;
-  const name = document.getElementById('inp-unit').value.trim();
-  const date = document.getElementById('inp-date').value || today();
+  const sid=document.getElementById('sel-subj').value;
+  const name=document.getElementById('inp-unit').value.trim();
+  const date=document.getElementById('inp-date').value||today();
   if(!name){ alert('단원명을 입력해주세요'); return; }
-  const btn = document.getElementById('add-unit-btn');
-  btn.disabled = true; btn.textContent = '저장 중...';
-  const unit = { id: Date.now(), sid, name, date, reviews: Array(REVIEW_INTERVALS.length).fill(false) };
+  const btn=document.getElementById('add-unit-btn');
+  btn.disabled=true; btn.textContent='저장 중...';
+  const unit={id:Date.now(),sid,name,date,reviews:Array(REVIEW_INTERVALS.length).fill(false)};
   state.units.push(unit);
-  setSyncStatus('syncing', '저장 중...');
-  try {
-    await apiPost({action:'saveUnit', unit});
-    setSyncStatus('ok', `마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e) { setSyncStatus('error', '저장 실패'); }
-  renderSubjects();
-  renderToday();
-  renderHeader();
+  setSyncStatus('syncing','저장 중...');
+  try { await apiPost({action:'saveUnit',unit}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','저장 실패'); }
+  renderSubjects(); renderToday(); renderHeader();
 }
 
 async function deleteUnit(id){
   if(!confirm('이 단원을 삭제할까요?')) return;
-  state.units = state.units.filter(u=>u.id!==id);
-  setSyncStatus('syncing', '삭제 중...');
-  try {
-    await apiPost({action:'deleteUnit', id});
-    setSyncStatus('ok', `마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e) { setSyncStatus('error', '삭제 실패'); }
+  state.units=state.units.filter(u=>u.id!==id);
+  setSyncStatus('syncing','삭제 중...');
+  try { await apiPost({action:'deleteUnit',id}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','삭제 실패'); }
   renderSubjects(); renderToday(); renderHeader();
 }
 
 // ── 복습 ──
 function renderReview(){
-  let html = `<div class="filter-row" id="review-filter">
+  let html=`<div class="filter-row" id="review-filter">
     <button class="filter-chip active" onclick="filterReview('all',this)">전체</button>
     <button class="filter-chip" onclick="filterReview('due',this)">복습 필요</button>
     ${SUBJECTS.filter(s=>state.units.some(u=>u.sid===s.id)).map(s=>`<button class="filter-chip" onclick="filterReview('${s.id}',this)">${s.name}</button>`).join('')}
   </div><div id="review-body"></div>`;
-  document.getElementById('panel-review').innerHTML = html;
-  filterReview('all', document.querySelector('#review-filter .filter-chip'));
+  document.getElementById('panel-review').innerHTML=html;
+  filterReview('all',document.querySelector('#review-filter .filter-chip'));
 }
 
-function getStatus(unit, idx){
-  const due = addDays(unit.date, REVIEW_INTERVALS[idx]);
-  const td = today();
+function getStatus(unit,idx){
+  const due=addDays(unit.date,REVIEW_INTERVALS[idx]);
+  const td=today();
   if(unit.reviews[idx]) return 'done';
   if(due===td) return 'today';
   if(due<td) return 'overdue';
   return 'upcoming';
 }
 
-function filterReview(filter, btn){
+function filterReview(filter,btn){
   document.querySelectorAll('#review-filter .filter-chip').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const td = today();
-  let units = [...state.units];
+  const td=today();
+  let units=[...state.units];
   if(filter==='due') units=units.filter(u=>REVIEW_INTERVALS.some((_,i)=>!u.reviews[i]&&addDays(u.date,REVIEW_INTERVALS[i])<=td));
   else if(filter!=='all') units=units.filter(u=>u.sid===filter);
   if(!units.length){ document.getElementById('review-body').innerHTML=`<div class="empty-state">해당하는 단원이 없어요</div>`; return; }
-  document.getElementById('review-body').innerHTML = units.map(u=>{
+  document.getElementById('review-body').innerHTML=units.map(u=>{
     const hasDue=REVIEW_INTERVALS.some((_,i)=>!u.reviews[i]&&addDays(u.date,REVIEW_INTERVALS[i])<=td);
     return `<div class="review-card">
       <div class="review-card-header">
@@ -777,45 +814,173 @@ function filterReview(filter, btn){
   }).join('');
 }
 
-async function toggleReview(uid, idx){
-  const u = state.units.find(u=>u.id===uid);
-  if(!u) return;
-  u.reviews[idx] = !u.reviews[idx];
-  setSyncStatus('syncing', '저장 중...');
-  try {
-    await apiPost({action:'saveUnit', unit:u});
-    setSyncStatus('ok', `마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e) { setSyncStatus('error', '저장 실패'); }
+async function toggleReview(uid,idx){
+  const u=state.units.find(u=>u.id===uid); if(!u) return;
+  u.reviews[idx]=!u.reviews[idx];
+  setSyncStatus('syncing','저장 중...');
+  try { await apiPost({action:'saveUnit',unit:u}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','저장 실패'); }
   renderReview(); renderToday(); renderHeader();
 }
 
+// ── 기출 분석 탭 ──
+function renderAnalysis(){
+  let html=`
+  <div class="sync-bar" style="margin-bottom:12px">
+    <div class="sync-dot"></div>
+    <span style="font-size:12px;color:var(--text2)">과목을 탭하면 기출 분석 데이터를 볼 수 있어요</span>
+  </div>`;
+
+  ANALYSIS_SUBJECTS.forEach((subj,i)=>{
+    html+=`
+    <div class="analysis-subject-card">
+      <div class="analysis-subject-header" onclick="toggleAnalysis(${i})">
+        <span class="analysis-subject-title">📚 ${subj.name}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="analysis-subject-meta">2014~2026</span>
+          <span class="analysis-chevron" id="chevron-${i}">▼</span>
+        </div>
+      </div>
+      <div class="analysis-body" id="analysis-body-${i}">
+        <div style="padding:20px;text-align:center;color:var(--text3);font-size:13px">
+          탭해서 불러오는 중...
+        </div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('panel-analysis').innerHTML=html;
+}
+
+function toggleAnalysis(idx){
+  const body=document.getElementById(`analysis-body-${idx}`);
+  const chevron=document.getElementById(`chevron-${idx}`);
+  const isOpen=body.classList.contains('open');
+
+  if(isOpen){
+    body.classList.remove('open');
+    chevron.classList.remove('open');
+  } else {
+    body.classList.add('open');
+    chevron.classList.add('open');
+    loadAnalysisData(idx);
+  }
+}
+
+async function loadAnalysisData(idx){
+  const subj=ANALYSIS_SUBJECTS[idx];
+  if(analysisCache[idx]){
+    renderAnalysisBody(idx, analysisCache[idx]);
+    return;
+  }
+  try {
+    const data=await apiGet(`getAnalysis&sheet=${encodeURIComponent(subj.sheetName)}`);
+    analysisCache[idx]=data;
+    renderAnalysisBody(idx, data);
+  } catch(e){
+    document.getElementById(`analysis-body-${idx}`).innerHTML=
+      `<div style="padding:16px;color:var(--danger);font-size:13px">⚠️ 데이터를 불러올 수 없어요</div>`;
+  }
+}
+
+function renderAnalysisBody(idx, data){
+  const subj=ANALYSIS_SUBJECTS[idx];
+
+  // 구글 시트에서 받은 raw 데이터를 섹션별로 분리
+  // 섹션1: 연도별 기출 (헤더 포함)
+  // 섹션2: 단원별 빈도
+  // 섹션3: 핵심 패턴
+  let examRows=[], freqRows=[], patternRows=[];
+  let section=0;
+
+  if(Array.isArray(data)){
+    data.forEach(row=>{
+      if(!row||!row[0]) return;
+      const first=String(row[0]).trim();
+      if(first.includes('연도별') || first==='연도') { section=1; return; }
+      if(first.includes('단원별') || first==='단원') { section=2; return; }
+      if(first.includes('핵심 출제') || first==='패턴 번호') { section=3; return; }
+      if(section===1) examRows.push(row);
+      if(section===2) freqRows.push(row);
+      if(section===3) patternRows.push(row);
+    });
+  }
+
+  let html='';
+
+  // 연도별 기출표
+  html+=`<div class="analysis-section-title">📋 연도별 기출 문제</div>`;
+  if(examRows.length){
+    html+=`<div style="overflow-x:auto"><table class="analysis-table">
+      <tr><th>연도</th><th>유형</th><th>핵심 주제</th><th>단원</th></tr>`;
+    examRows.forEach(r=>{
+      html+=`<tr>
+        <td style="white-space:nowrap;font-family:'DM Mono',monospace;font-size:11px">${r[0]||''}</td>
+        <td><span class="badge ${String(r[1]).includes('B')?'badge-purple':'badge-blue'}" style="font-size:10px">${r[1]||''}</span></td>
+        <td>${r[2]||''}</td>
+        <td style="color:var(--text2);font-size:11px">${r[3]||''}</td>
+      </tr>`;
+    });
+    html+=`</table></div>`;
+  } else {
+    html+=`<div style="padding:12px;color:var(--text3);font-size:12px">데이터를 불러오는 중...</div>`;
+  }
+
+  // 단원별 빈도
+  html+=`<div class="analysis-section-title" style="margin-top:16px">⭐ 단원별 출제 빈도</div>`;
+  if(freqRows.length){
+    freqRows.forEach(r=>{
+      html+=`<div class="freq-row">
+        <div class="freq-name">${r[0]||''}</div>
+        <div class="freq-stars">${r[1]||''}</div>
+        <div class="freq-count">${r[2]||''}</div>
+      </div>`;
+    });
+  }
+
+  // 핵심 출제 패턴
+  html+=`<div class="analysis-section-title" style="margin-top:16px">🎯 핵심 출제 패턴</div>`;
+  if(patternRows.length){
+    patternRows.forEach(r=>{
+      html+=`<div class="pattern-item">
+        <span class="pattern-num">${r[0]||''}</span>
+        <span class="pattern-title">${r[1]||''}</span>
+        <div class="pattern-desc">${r[2]||''}</div>
+        <div class="pattern-year">${r[3]||''}</div>
+      </div>`;
+    });
+  }
+
+  document.getElementById(`analysis-body-${idx}`).innerHTML=html;
+}
+
 // ── 기록 ──
-let recordFilter = 'all';
+let recordFilter='all';
 function renderRecord(){
-  let html = `
+  let html=`
   <div class="filter-row" id="rec-filter">
     <button class="filter-chip ${recordFilter==='all'?'active':''}" onclick="setRecFilter('all',this)">전체</button>
     ${SUBJECTS.map(s=>`<button class="filter-chip ${recordFilter===s.id?'active':''}" onclick="setRecFilter('${s.id}',this)">${s.name}</button>`).join('')}
   </div>
   <button class="btn-primary" style="margin-bottom:14px" onclick="openRecordModal()">+ 풀이 기록 추가</button>
   <div id="rec-body"></div>`;
-  document.getElementById('panel-record').innerHTML = html;
+  document.getElementById('panel-record').innerHTML=html;
   renderRecordBody();
 }
 
-function setRecFilter(f, btn){
-  recordFilter = f;
+function setRecFilter(f,btn){
+  recordFilter=f;
   document.querySelectorAll('#rec-filter .filter-chip').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderRecordBody();
 }
 
 function renderRecordBody(){
-  let records = [...state.records].reverse();
+  let records=[...state.records].reverse();
   if(recordFilter!=='all') records=records.filter(r=>r.sid===recordFilter);
   if(!records.length){ document.getElementById('rec-body').innerHTML=`<div class="empty-state">기록이 없어요<br><small>기출 풀이 후 기록을 남겨보세요</small></div>`; return; }
-  document.getElementById('rec-body').innerHTML = records.map(r=>{
-    const pct = r.total>0?Math.round(r.correct/r.total*100):null;
+  document.getElementById('rec-body').innerHTML=records.map(r=>{
+    const pct=r.total>0?Math.round(r.correct/r.total*100):null;
     return `<div class="record-card">
       <div class="record-meta">
         <span class="badge badge-gray">${subjectName(r.sid)}</span>
@@ -834,8 +999,8 @@ function renderRecordBody(){
 }
 
 function openRecordModal(){
-  document.getElementById('rec-subject').innerHTML = SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-  document.getElementById('rec-date').value = today();
+  document.getElementById('rec-subject').innerHTML=SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+  document.getElementById('rec-date').value=today();
   document.getElementById('rec-source').value='';
   document.getElementById('rec-correct').value='';
   document.getElementById('rec-total').value='';
@@ -847,51 +1012,47 @@ function openRecordModal(){
 }
 
 function updateRecUnitSelect(){
-  const sid = document.getElementById('rec-subject').value;
-  const units = state.units.filter(u=>u.sid===sid);
-  document.getElementById('rec-unit').innerHTML = `<option value="">-- 단원 선택 (선택사항) --</option>` + units.map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
+  const sid=document.getElementById('rec-subject').value;
+  const units=state.units.filter(u=>u.sid===sid);
+  document.getElementById('rec-unit').innerHTML=`<option value="">-- 단원 선택 (선택사항) --</option>`+units.map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
 }
 
-function closeRecordModal(e, force=false){
+function closeRecordModal(e,force=false){
   if(force||(e&&e.target===document.getElementById('record-modal')))
     document.getElementById('record-modal').classList.remove('open');
 }
 
 async function saveRecord(){
-  const sid = document.getElementById('rec-subject').value;
-  const uid = document.getElementById('rec-unit').value;
-  const unitName = uid?(state.units.find(u=>u.id==uid)||{}).name||'':'';
-  const date = document.getElementById('rec-date').value||today();
-  const source = document.getElementById('rec-source').value.trim();
-  const correct = parseInt(document.getElementById('rec-correct').value)||0;
-  const total = parseInt(document.getElementById('rec-total').value)||0;
-  const memo = document.getElementById('rec-memo').value.trim();
-  const btn = document.getElementById('rec-save-btn');
+  const sid=document.getElementById('rec-subject').value;
+  const uid=document.getElementById('rec-unit').value;
+  const unitName=uid?(state.units.find(u=>u.id==uid)||{}).name||'':'';
+  const date=document.getElementById('rec-date').value||today();
+  const source=document.getElementById('rec-source').value.trim();
+  const correct=parseInt(document.getElementById('rec-correct').value)||0;
+  const total=parseInt(document.getElementById('rec-total').value)||0;
+  const memo=document.getElementById('rec-memo').value.trim();
+  const btn=document.getElementById('rec-save-btn');
   btn.disabled=true; btn.textContent='저장 중...';
-  const record = {id:Date.now(), sid, unitName, date, source, correct, total, memo};
+  const record={id:Date.now(),sid,unitName,date,source,correct,total,memo};
   state.records.push(record);
   setSyncStatus('syncing','저장 중...');
-  try {
-    await apiPost({action:'saveRecord', record});
-    setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e){ setSyncStatus('error','저장 실패'); }
+  try { await apiPost({action:'saveRecord',record}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','저장 실패'); }
   closeRecordModal(null,true);
   renderRecord();
 }
 
 async function deleteRecord(id){
   if(!confirm('이 기록을 삭제할까요?')) return;
-  state.records = state.records.filter(r=>r.id!==id);
+  state.records=state.records.filter(r=>r.id!==id);
   setSyncStatus('syncing','삭제 중...');
-  try {
-    await apiPost({action:'deleteRecord', id});
-    setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
-  } catch(e){ setSyncStatus('error','삭제 실패'); }
+  try { await apiPost({action:'deleteRecord',id}); setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`); }
+  catch(e){ setSyncStatus('error','삭제 실패'); }
   renderRecordBody();
 }
 
 function renderAll(){ renderHeader(); renders[currentTab](); }
-const renders = { today:renderToday, subjects:renderSubjects, review:renderReview, record:renderRecord };
+const renders={today:renderToday,subjects:renderSubjects,review:renderReview,analysis:renderAnalysis,record:renderRecord};
 
 renderHeader();
 loadData();
