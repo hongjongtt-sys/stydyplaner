@@ -312,6 +312,7 @@ const YEARS=[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
 
 // ── 히트맵 데이터 ──
 const HEATMAP_DATA={
+  '수학교육론': {2014:null,2015:null,2016:null,2017:null,2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
   '해석학':    {2014:'AB',2015:'A',2016:'AB',2017:'B',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
   '위상수학':  {2014:'AB',2015:'A',2016:'A',2017:'A',2018:'A',2019:'A',2020:'AB',2021:'AB',2022:'B',2023:'AB',2024:'A',2025:'B',2026:'AB'},
   '현대대수학':{2014:'AB',2015:'A',2016:'AB',2017:'AB',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
@@ -326,6 +327,105 @@ const HEATMAP_DATA={
 
 // ── 셀 클릭 팝업 상세 데이터 ──
 const CELL_DATA={
+  '수학교육론':{
+  exams:{
+    2018:[
+      {type:'전공A',subject:'2015 개정 교육과정 내용 체계 / 문자와 식 영역 변화',unit:'교육과정'},
+      {type:'전공A',subject:'교수학적 변환 극단적 현상 / 비고츠키 비계설정(scaffolding)',unit:'교수학습이론 (변환론/비고츠키)'},
+      {type:'전공A',subject:'디너스 개념 형성 이론 / 교구 제작 활용',unit:'학습심리 (디너스)'},
+      {type:'전공B',subject:'셈돌 모델로 음수 덧셈 / 모델 한계 보완 지도 방안',unit:'수·연산 교수학습'},
+      {type:'전공B',subject:'사회적 구성주의 vs 급진적 구성주의 / 수학화 / 교과 역량',unit:'수학교육철학 / 수학화론'},
+    ],
+    2019:[
+      {type:'전공A',subject:'반 힐레 5단계 교수·학습 순서 배열 및 단계 명칭',unit:'학습수준이론 (반 힐레)'},
+      {type:'전공A',subject:'분석법 적용 / 스켐프 도구적·관계적 이해',unit:'문제해결 / 학습심리 (스켐프)'},
+      {type:'전공A',subject:'피아제 반영적 추상화 (반사 vs 반성)',unit:'학습심리 (피아제)'},
+      {type:'전공B',subject:'브루소 인식론적 장애 / 토피아즈 효과',unit:'교수학습이론 (브루소)'},
+      {type:'전공B',subject:'준경험주의 / 증명 지도 / 수학적 의사소통 / 관찰·자기 평가',unit:'수학교육철학 / 평가'},
+    ],
+    2020:[
+      {type:'전공A',subject:'함수 개념의 역사적 발달 순서 배열',unit:'교육과정·역사'},
+      {type:'전공A',subject:'APOS 이론 - 행동(Action)·과정(Process)·대상(Object)',unit:'학습심리 (APOS)'},
+      {type:'전공A',subject:'트레퍼스 수평적·수직적 수학화 분석',unit:'수학화론'},
+      {type:'전공B',subject:'라카토스 준경험주의 - 괴물 차단 / 예외 포함 용어',unit:'수학교육철학 (라카토스)'},
+      {type:'전공B',subject:'프로젝트 평가 / 통계 지도(상관관계) 분석',unit:'평가 / 통계 교수학습'},
+      {type:'전공B',subject:'브루소 토피아즈 효과 / 극단적 교수 현상',unit:'교수학습이론 (브루소)'},
+    ],
+    2021:[
+      {type:'전공A',subject:'수학교육 역사적 흐름 순서 배열 (근대화→현대화→...)',unit:'수학교육 발달사'},
+      {type:'전공A',subject:'비고츠키 ZPD / 사회적·급진적 구성주의 비교',unit:'학습심리 / 수학교육철학'},
+      {type:'전공A',subject:'2015 개정 교수·학습 방법 / 온라인 수업 지도안',unit:'교육과정 / 수업'},
+      {type:'전공B',subject:'형태심리학 게슈탈트 용어 (재편성·생산적 사고)',unit:'학습심리 (형태심리학)'},
+      {type:'전공B',subject:'베커 통계 교육 이론 (역사발생적 접근)',unit:'확률·통계 교수학습'},
+      {type:'전공B',subject:'프로이덴탈 사고 실험 / 수학화',unit:'수학화론'},
+      {type:'전공B',subject:'디너스 수학적 다양성 / 피아제 반영적 추상화',unit:'학습심리 (디너스/피아제)'},
+    ],
+    2022:[
+      {type:'전공A',subject:'수학 교과 역량 / 포트폴리오·동료·자기 평가',unit:'평가 / 교육과정'},
+      {type:'전공A',subject:'크라벤담 질적 접근 / 수학화(모델링) 활동',unit:'함수 교수학습 / 수학화론'},
+      {type:'전공A',subject:'수학사 활용 - 역사발생적 원리 / 프로이덴탈 vs 퇴플리츠',unit:'수학사 활용'},
+      {type:'전공B',subject:'플라톤주의 vs 형식주의 수리철학 비교',unit:'수학교육철학'},
+      {type:'전공B',subject:'교수학적 변환론(지식의 파손성) / Chevallard',unit:'교수학습이론 (변환론)'},
+      {type:'전공B',subject:'브루소(토피아즈 효과) / 스켐프(도구적 이해) / 학생 오개념',unit:'교수학습이론 / 학습심리'},
+    ],
+    2023:[
+      {type:'전공A',subject:'수학교육 개혁운동 비교 (근대화 운동 vs 현대화 운동)',unit:'수학교육 발달사'},
+      {type:'전공A',subject:'대푯값 지도 / 수학적 모델링 능력(2015 교수·학습 방법)',unit:'교육과정 / 통계 교수학습'},
+      {type:'전공A',subject:'포트폴리오·동료 평가 (2015 개정 평가 방법 용어)',unit:'평가'},
+      {type:'전공B',subject:'라카토스 준거개념 / 유사과학 용어',unit:'수학교육철학 (라카토스)'},
+      {type:'전공B',subject:'디너스 수학적 다양성 / 피아제 개폐 연속체',unit:'학습심리 (디너스/피아제)'},
+      {type:'전공B',subject:'분석법의 수학교육적 의의 서술',unit:'문제해결'},
+      {type:'전공B',subject:'프로이덴탈 국소적 조직화 / 반 힐레 수준',unit:'수학화론 / 학습수준이론'},
+    ],
+    2024:[
+      {type:'전공A',subject:'오수벨 유의미 수용학습 - 지식·원리 순서대로',unit:'학습심리 (오수벨)'},
+      {type:'전공A',subject:'형식 불역의 원리(Freudenthal) + 수학 교과 역량',unit:'수·연산 교수학습 / 교육과정'},
+      {type:'전공A',subject:'채점기준표 A(총체적) vs B(분석적 루브릭) 비교',unit:'평가'},
+      {type:'전공B',subject:'2022 개정 교육과정 내용 비교 (중학교 영역명 변화)',unit:'교육과정'},
+      {type:'전공B',subject:'브루소(개인화·탈배경화) / 비너 개념이미지·개념정의',unit:'교수학습이론 (브루소/비너)'},
+      {type:'전공B',subject:'브루너 표현 방식 (작동·영상·상징)',unit:'학습심리 (브루너)'},
+      {type:'전공B',subject:'NCTM 수학적 모델링 과정 / 수학화 과정 비교',unit:'수학화론 / 문제해결'},
+    ],
+    2025:[
+      {type:'전공A',subject:'비너 개념이미지·개념정의 / 변수 개념 오개념',unit:'학습심리 (비너) / 대수 교수학습'},
+      {type:'전공A',subject:'스켐프 이해 유형 / 폴리아 계획 수립 단계 / 귀납 추론',unit:'문제해결 / 학습심리 (스켐프)'},
+      {type:'전공A',subject:'APOS 이론 + 스파드 조작적·대상적 방법',unit:'학습심리 (APOS/스파드)'},
+      {type:'전공B',subject:'수리철학 4가지 비교 - 플라톤주의·직관주의·형식주의·사회적 구성주의 오류 찾기',unit:'수학교육철학'},
+      {type:'전공B',subject:'브라운·월터 "만약 그렇지 않다면" 전략 / 문제 제기',unit:'문제해결'},
+      {type:'전공B',subject:'통계 프로젝트 평가 / 자료와 가능성(2022 개정)',unit:'평가 / 교육과정 / 통계 교수학습'},
+      {type:'전공B',subject:'딘즈 수학적 다양성 원리 / 조작 활동',unit:'학습심리 (디너스)'},
+    ],
+    2026:[
+      {type:'전공A',subject:'Chevallard 교수학적 변환론 / 브루소(개인화·탈배경화)',unit:'교수학습이론 (변환론/브루소)'},
+      {type:'전공A',subject:'수학사 활용 / 피아제 반사·반성으로 수업 평가',unit:'수학사 활용 / 문제해결'},
+      {type:'전공A',subject:'스켐프 관계적 이해 / 폴리아 문제해결 / 귀납 추론 발문',unit:'문제해결 / 학습심리 (스켐프)'},
+      {type:'전공A',subject:'확률 지도 - 고전적 확률 정의·근원사건·심프슨 패러독스',unit:'확률·통계 교수학습'},
+      {type:'전공B',subject:'폴리아 문제해결 교육론 (발견술) 용어',unit:'문제해결'},
+      {type:'전공B',subject:'비고츠키 ZPD 비계설정 / 장미에 번역 활동 / 수학화',unit:'학습심리 (비고츠키) / 수학화론'},
+      {type:'전공B',subject:'프로이덴탈 수학화 / Chevallard 변환론 / 통계(2022 개정)',unit:'수학화론 / 교수학습이론 / 교육과정'},
+    ],
+  },
+  freq:[
+    {name:'교수학습이론 (브루소·교수학적 변환론)',stars:'★★★★★',count:'9회'},
+    {name:'학습심리학 (피아제·비고츠키·스켐프·디너스·브루너·오수벨)',stars:'★★★★★',count:'9회'},
+    {name:'수학교육철학 (라카토스·구성주의·수리철학 비교)',stars:'★★★★★',count:'9회'},
+    {name:'수학화론 (프로이덴탈·트레퍼스·크라벤담)',stars:'★★★★★',count:'9회'},
+    {name:'문제해결 (폴리아·스켐프·분석법·귀납추론)',stars:'★★★★',count:'7회'},
+    {name:'교육과정 (2015·2022 개정 / 교과 역량)',stars:'★★★★',count:'7회'},
+    {name:'평가 (포트폴리오·루브릭·과정중심)',stars:'★★★★',count:'6회'},
+    {name:'APOS 이론 / 스파드',stars:'★★★',count:'3회'},
+    {name:'수학사 활용 (역사발생적 원리)',stars:'★★★',count:'3회'},
+    {name:'확률·통계 교수학습',stars:'★★★',count:'4회'},
+  ],
+  patterns:[
+    {num:'①',title:'이론가 직접 적용형 — 매년 출제',desc:'수업 장면·대화를 제시하고 특정 이론가(브루소·프로이덴탈·비고츠키·스켐프·피아제·디너스·라카토스·폴리아)의 개념·용어로 분석. 용어를 정확히 쓰는 것이 핵심',year:'2018~2026 매년'},
+    {num:'②',title:'두 이론 비교·연결형',desc:'피아제+디너스, 사회적+급진적 구성주의, 플라톤주의+형식주의 등 두 이론가를 동시에 비교. 전공B에 집중 출제',year:'매년 전공B'},
+    {num:'③',title:'교육과정 연계형 (2020 이후 강화)',desc:'2015/2022 개정 교수·학습 방법·평가 원칙을 수업 장면에서 서술. 교육과정 원문 표현 그대로 써야 득점',year:'2020~2026'},
+    {num:'④',title:'브루소 극단적 현상 식별형',desc:'토피아즈 효과·메타수준 학습 방해·인식론적 장애를 수업 대화에서 식별·설명',year:'매년 (브루소 단골)'},
+    {num:'⑤',title:'수학화 과정 분석형 (2020 이후 증가)',desc:'수평적/수직적 수학화, NCTM 모델링 단계를 수업 자료에서 구분하여 서술',year:'2020~2026'},
+    {num:'⑥',title:'평가 설계·분석형 (2022 이후 신유형)',desc:'루브릭(총체적·분석적), 포트폴리오, 과정중심 평가 설계·장단점 서술',year:'2022~2026'},
+  ],
+},
   '해석학':{
     exams:{
       2014:[{type:'전공A',subject:'거듭제곱급수 수렴구간',unit:'급수 / 수렴반경'},{type:'전공A',subject:'도함수 연속성 조건',unit:'미분가능성 / 연속성'},{type:'전공A',subject:'연속함수 최댓값 달성',unit:'연속함수의 성질'}],
@@ -623,25 +723,43 @@ const CELL_DATA={
 };
 
 // 과목별 출제 횟수
-const SUBJECT_COUNTS={'해석학':28,'위상수학':20,'현대대수학':32,'미적분학':17,'미분기하학':26,'정수론':13,'복소해석학':23,'선형대수':13,'이산수학':11,'확률과통계':26};
-const SUBJECT_A_COUNTS={'해석학':18,'위상수학':15,'현대대수학':18,'미적분학':17,'미분기하학':13,'정수론':9,'복소해석학':12,'선형대수':10,'이산수학':10,'확률과통계':16};
-const SUBJECT_DIFFICULTY={'해석학':85,'위상수학':80,'현대대수학':95,'미적분학':65,'미분기하학':80,'정수론':70,'복소해석학':82,'선형대수':68,'이산수학':70,'확률과통계':72};
+const SUBJECT_COUNTS={'수학교육론':18, '해석학':28,'위상수학':20,'현대대수학':32,'미적분학':17,'미분기하학':26,'정수론':13,'복소해석학':23,'선형대수':13,'이산수학':11,'확률과통계':26};
+const SUBJECT_A_COUNTS={'수학교육론':9,'해석학':18,'위상수학':15,'현대대수학':18,'미적분학':17,'미분기하학':13,'정수론':9,'복소해석학':12,'선형대수':10,'이산수학':10,'확률과통계':16};
+const SUBJECT_DIFFICULTY={'수학교육론':75,'해석학':85,'위상수학':80,'현대대수학':95,'미적분학':65,'미분기하학':80,'정수론':70,'복소해석학':82,'선형대수':68,'이산수학':70,'확률과통계':72};
 const TOP_UNITS=[
   {subject:'현대대수학',unit:'체론 – 갈루아 이론',stars:6,count:14},
   {subject:'해석학',unit:'함수열·함수항급수 / 평등수렴',stars:5,count:13},
   {subject:'미분기하학',unit:'공간곡선론 (곡률·비틀림·Frenet 틀)',stars:6,count:13},
+  {subject:'수학교육론',unit:'교수학습이론 (브루소·교수학적 변환론)',stars:5,count:9},
+  {subject:'수학교육론',unit:'수학화론 (프로이덴탈·트레퍼스)',stars:5,count:9},
   {subject:'확률과통계',unit:'결합분포 / 조건부분포',stars:5,count:8},
   {subject:'확률과통계',unit:'확률변수 함수의 분포',stars:5,count:8},
   {subject:'복소해석학',unit:'코시-리만 방정식 / 해석함수',stars:5,count:8},
   {subject:'현대대수학',unit:'군론 (순환군·잉여군·준동형)',stars:5,count:12},
   {subject:'미분기하학',unit:'곡면의 곡률',stars:5,count:10},
-  {subject:'선형대수',unit:'고유값·고유벡터',stars:5,count:8},
-  {subject:'위상수학',unit:'내부·폐포·경계',stars:5,count:7},
 ];
 const RECENT_TRENDS={
-  2024:[{text:'연속 CDF 순증가 조건 활용 변수변환',isNew:true,subject:'확률통계'},{text:'대칭행렬 최소다항식·케일리-해밀턴 심화',isNew:true,subject:'선형대수'},{text:'포아송분포 표본분산 기댓값',isNew:true,subject:'확률통계'},{text:'점화식 생성함수 멱급수 계수 추출',isNew:false,subject:'이산수학'}],
-  2025:[{text:'결합밀도함수 독립성 판별 명시 출제',isNew:true,subject:'확률통계'},{text:'그래프 채색수 + 차수 조건 최대화 심화',isNew:false,subject:'이산수학'},{text:'대칭행렬 직교대각화 매년 고정',isNew:false,subject:'선형대수'},{text:'갈루아군 G(K/Q)≅Z₂×S₃ 복합',isNew:false,subject:'현대대수'}],
-  2026:[{text:'점화식 4단계 복합 (특성다항식→일반항→생성함수→계수)',isNew:true,subject:'이산수학'},{text:'등위곡선 + 이상적분 연결 고난도',isNew:true,subject:'미적분학'},{text:'혼합형 PDF + 이항분포 응용',isNew:true,subject:'확률통계'},{text:'편각 원리로 f\'/f 적분 계산',isNew:false,subject:'복소해석'}],
+  2024:[
+    {text:'연속 CDF 순증가 조건 활용 변수변환',isNew:true,subject:'확률통계'},
+    {text:'대칭행렬 최소다항식·케일리-해밀턴 심화',isNew:true,subject:'선형대수'},
+    {text:'채점기준표(총체적 vs 분석적 루브릭) 설계형 첫 출제',isNew:true,subject:'수학교육론'},
+    {text:'브루소 개인화·탈배경화 + 비너 개념이미지 복합',isNew:true,subject:'수학교육론'},
+    {text:'포아송분포 표본분산 기댓값',isNew:false,subject:'확률통계'},
+  ],
+  2025:[
+    {text:'수리철학 4가지 비교에서 오류 찾기 신유형',isNew:true,subject:'수학교육론'},
+    {text:'스파드(Sfard) 조작적·대상적 방법 단독 출제',isNew:true,subject:'수학교육론'},
+    {text:'결합밀도함수 독립성 판별 명시 출제',isNew:true,subject:'확률통계'},
+    {text:'그래프 채색수 + 차수 조건 최대화 심화',isNew:false,subject:'이산수학'},
+    {text:'대칭행렬 직교대각화 매년 고정',isNew:false,subject:'선형대수'},
+  ],
+  2026:[
+    {text:'변환론+브루소 복합 출제 강화 (전공A)',isNew:false,subject:'수학교육론'},
+    {text:'장미에(Janvier) 번역 활동 신규 등장',isNew:true,subject:'수학교육론'},
+    {text:'심프슨 패러독스 확률 교수학습 출제',isNew:true,subject:'수학교육론'},
+    {text:'점화식 4단계 복합 (특성다항식→일반항→생성함수→계수)',isNew:true,subject:'이산수학'},
+    {text:'혼합형 PDF + 이항분포 응용',isNew:true,subject:'확률통계'},
+  ],
 };
 
 let state={units:[],records:[]};
@@ -864,7 +982,13 @@ function renderCurrentAnalysisTab(){
 // ① 히트맵
 function renderHeatmap(){
   const subjectNames=Object.keys(HEATMAP_DATA);
-  const shortNames={'해석학':'해석학','위상수학':'위상수학','현대대수학':'현대대수','미적분학':'미적분','미분기하학':'미분기하','정수론':'정수론','복소해석학':'복소해석','선형대수':'선형대수','이산수학':'이산수학','확률과통계':'확률통계'};
+  const shortNames={
+  '수학교육론':'수학교육론',
+  '해석학':'해석학','위상수학':'위상수학','현대대수학':'현대대수',
+  '미적분학':'미적분','미분기하학':'미분기하','정수론':'정수론',
+  '복소해석학':'복소해석','선형대수':'선형대수','이산수학':'이산수학',
+  '확률과통계':'확률통계'
+};
   let html=`
   <div class="filter-row">
     <button class="filter-chip ${hmFilter==='all'?'active':''}" onclick="setHmFilter('all',this)">전체</button>
@@ -964,7 +1088,7 @@ function closeCellPopup(e,force=false){
 // ② 과목 분석
 function renderChart(){
   const subjects=Object.keys(SUBJECT_COUNTS);const maxCount=Math.max(...Object.values(SUBJECT_COUNTS));
-  const colors=['#378ADD','#7F77DD','#1D9E75','#D85A30','#1D9E75','#9a6b00','#6b48c8','#378ADD','#c0392b','#2d7a4f'];
+  const colors=['#9B59B6','#378ADD','#7F77DD','#1D9E75','#D85A30','#1D9E75','#9a6b00','#6b48c8','#378ADD','#c0392b','#2d7a4f'];
   let html=`<div class="bar-section"><div class="bar-section-title">과목별 총 출제 문제 수 (2014~2026)</div>`;
   subjects.forEach((s,i)=>{
     const cnt=SUBJECT_COUNTS[s];const pct=Math.round(cnt/maxCount*100);
