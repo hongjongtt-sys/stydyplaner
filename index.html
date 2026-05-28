@@ -7,15 +7,15 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
 :root {
-  --bg:#f7f6f3; --surface:#ffffff; --surface2:#f0ede8;
-  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.15);
-  --text:#1a1917; --text2:#6b6860; --text3:#9e9b94;
-  --accent:#3d5a99; --accent-light:#e8edf7;
-  --success:#2d7a4f; --success-light:#e6f4ec;
-  --warning:#9a6b00; --warning-light:#fef7e0;
-  --danger:#c0392b; --danger-light:#fdecea;
-  --purple:#6b48c8; --purple-light:#eeebfb;
-  --radius:12px; --radius-sm:8px; --radius-xs:6px;
+  --bg:#f7f6f3;--surface:#ffffff;--surface2:#f0ede8;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);
+  --text:#1a1917;--text2:#6b6860;--text3:#9e9b94;
+  --accent:#3d5a99;--accent-light:#e8edf7;
+  --success:#2d7a4f;--success-light:#e6f4ec;
+  --warning:#9a6b00;--warning-light:#fef7e0;
+  --danger:#c0392b;--danger-light:#fdecea;
+  --purple:#6b48c8;--purple-light:#eeebfb;
+  --radius:12px;--radius-sm:8px;--radius-xs:6px;
   --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -149,40 +149,57 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .hm-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .hm-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .hm-legend-dot{width:12px;height:12px;border-radius:3px}
-.hm-popup{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;margin-top:10px;display:none}
-.hm-popup.show{display:block}
-.hm-popup-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--accent)}
-.hm-popup-item{font-size:12px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border)}
-.hm-popup-item:last-child{border-bottom:none}
+
+/* 팝업 (슬라이드업) */
+.popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:400;align-items:flex-end;justify-content:center}
+.popup-overlay.open{display:flex}
+.popup-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:600px;max-height:85vh;overflow-y:auto;position:relative}
+.popup-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px}
+.popup-close{position:absolute;top:16px;right:16px;width:30px;height:30px;border:none;background:var(--surface2);border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:16px}
+.popup-header{margin-bottom:14px}
+.popup-year{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:2px}
+.popup-title{font-size:16px;font-weight:700;color:var(--accent)}
+.popup-type{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:10px;margin-top:4px}
+.type-a{background:var(--accent-light);color:var(--accent)}
+.type-b{background:var(--purple-light);color:var(--purple)}
+.type-ab{background:var(--success-light);color:var(--success)}
+
+.popup-section{margin-bottom:14px}
+.popup-section-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.exam-item{background:var(--surface2);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px}
+.exam-item-type{font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;display:inline-block;margin-bottom:4px}
+.exam-item-subject{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px}
+.exam-item-unit{font-size:11px;color:var(--text2)}
+
+.freq-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)}
+.freq-item:last-child{border-bottom:none}
+.freq-item-name{flex:1;font-size:12px;color:var(--text)}
+.freq-item-stars{color:#f59e0b;font-size:11px;flex-shrink:0}
+.freq-item-count{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;flex-shrink:0}
+
+.pattern-item{background:#f0fdf4;border-left:3px solid var(--success);border-radius:0 var(--radius-xs) var(--radius-xs) 0;padding:8px 10px;margin-bottom:6px}
+.pattern-num{font-size:10px;font-weight:700;color:var(--success)}
+.pattern-title{font-size:12px;font-weight:600;color:var(--text);margin:2px 0}
+.pattern-desc{font-size:11px;color:var(--text2);line-height:1.5}
+.pattern-year{font-size:10px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace}
 
 /* 바차트 */
 .bar-section{margin-bottom:20px}
 .bar-section-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .bar-label{font-size:11px;width:65px;color:var(--text);text-align:right;flex-shrink:0;line-height:1.3}
-.bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:20px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:600;transition:width 0.4s ease;white-space:nowrap}
+.bar-bg{flex:1;background:var(--surface2);border-radius:4px;height:20px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:600;white-space:nowrap}
 .bar-count{font-size:11px;color:var(--text3);width:28px;flex-shrink:0;font-family:'DM Mono',monospace}
 .ratio-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .ratio-label{font-size:11px;width:65px;color:var(--text);text-align:right;flex-shrink:0}
 .ratio-bar{flex:1;height:16px;border-radius:4px;overflow:hidden;display:flex}
-.ratio-a{background:#B5D4F4;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#0C447C;transition:width 0.4s}
-.ratio-b{background:#CECBF6;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#3C3489;transition:width 0.4s}
+.ratio-a{background:#B5D4F4;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#0C447C}
+.ratio-b{background:#CECBF6;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#3C3489}
 
 /* 취약단원 */
 .weak-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid var(--border);box-shadow:var(--shadow)}
-.weak-rank{font-size:18px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;margin-right:8px}
-.weak-subject{font-size:10px;color:var(--text3);margin-bottom:2px}
-.weak-unit{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
-.weak-stars{color:#f59e0b;font-size:12px}
-.weak-msg{font-size:11px;color:var(--danger);margin-top:4px}
-.weak-done{font-size:11px;color:var(--success);margin-top:4px}
-
-/* 학습플랜 */
 .plan-card{background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:8px;border:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.plan-deadline{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:2px}
-.plan-unit{font-size:13px;font-weight:600}
-.plan-subject{font-size:11px;color:var(--text2);margin-top:2px}
 .plan-urgency{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;flex-shrink:0}
 .plan-urgent{background:var(--danger-light);color:var(--danger)}
 .plan-soon{background:var(--warning-light);color:var(--warning)}
@@ -194,12 +211,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .trend-item{font-size:12px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border)}
 .trend-item:last-child{border-bottom:none}
 .trend-new-badge{display:inline-block;font-size:9px;background:var(--danger-light);color:var(--danger);padding:1px 5px;border-radius:4px;margin-left:4px;font-weight:600}
-
-/* 레이더 차트 */
-.radar-wrap{display:flex;justify-content:center;margin-bottom:16px}
-.radar-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:10px}
-.radar-legend-item{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px}
-.radar-dot{width:10px;height:10px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -228,6 +239,20 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <div id="panel-review" class="panel"></div>
 <div id="panel-analysis" class="panel"></div>
 <div id="panel-record" class="panel"></div>
+
+<!-- 히트맵 셀 클릭 팝업 -->
+<div class="popup-overlay" id="cell-popup" onclick="closeCellPopup(event)">
+  <div class="popup-sheet">
+    <div class="popup-handle"></div>
+    <button class="popup-close" onclick="closeCellPopup(null,true)">×</button>
+    <div class="popup-header">
+      <div class="popup-year" id="popup-year"></div>
+      <div class="popup-title" id="popup-title"></div>
+      <div id="popup-type"></div>
+    </div>
+    <div id="popup-content"></div>
+  </div>
+</div>
 
 <nav class="tab-nav">
   <button class="tab-btn active" onclick="switchTab('today',this)">
@@ -271,12 +296,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 </div>
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzKE1cc7DAF_23UjGLcH-6IuEchu6NrcuRTp40G5pdlt2eS3AG6vfG_LVwrMzG8lvxOJw/exec';
-const EXAM_DATE = new Date('2025-11-28');
-const REVIEW_INTERVALS = [1,3,7,14,30,60];
-const INTERVAL_LABELS = ['1일','3일','7일','14일','30일','60일'];
-
-const SUBJECTS = [
+const API_URL='https://script.google.com/macros/s/AKfycbzKE1cc7DAF_23UjGLcH-6IuEchu6NrcuRTp40G5pdlt2eS3AG6vfG_LVwrMzG8lvxOJw/exec';
+const EXAM_DATE=new Date('2025-11-28');
+const REVIEW_INTERVALS=[1,3,7,14,30,60];
+const INTERVAL_LABELS=['1일','3일','7일','14일','30일','60일'];
+const SUBJECTS=[
   {id:'edu',name:'교육학'},{id:'mtheory',name:'수학교육론'},
   {id:'analysis',name:'해석학'},{id:'topology',name:'위상수학'},
   {id:'algebra',name:'현대대수학'},{id:'linear',name:'선형대수학'},
@@ -284,25 +308,10 @@ const SUBJECTS = [
   {id:'discrete',name:'이산수학'},{id:'prob',name:'확률과 통계'},
   {id:'complex',name:'복소해석학'},{id:'calculus',name:'미분적분학'},
 ];
+const YEARS=[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
 
-// ── 기출 분석 데이터 ──
-const ANALYSIS_SUBJECTS = [
-  {name:'해석학',sheetName:'해석학'},
-  {name:'위상수학',sheetName:'위상수학'},
-  {name:'현대대수학',sheetName:'현대대수학'},
-  {name:'미적분학',sheetName:'미적분학'},
-  {name:'미분기하학',sheetName:'미분기하학'},
-  {name:'정수론',sheetName:'정수론'},
-  {name:'복소해석학',sheetName:'복소해석학'},
-  {name:'선형대수',sheetName:'선형대수'},
-  {name:'이산수학',sheetName:'이산수학'},
-  {name:'확률과통계',sheetName:'확률과통계'},
-];
-
-const YEARS = [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
-
-// 히트맵 데이터: [과목, 연도, 유형] A=전공A, B=전공B, AB=둘다
-const HEATMAP_DATA = {
+// ── 히트맵 데이터 ──
+const HEATMAP_DATA={
   '해석학':    {2014:'AB',2015:'A',2016:'AB',2017:'B',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
   '위상수학':  {2014:'AB',2015:'A',2016:'A',2017:'A',2018:'A',2019:'A',2020:'AB',2021:'AB',2022:'B',2023:'AB',2024:'A',2025:'B',2026:'AB'},
   '현대대수학':{2014:'AB',2015:'A',2016:'AB',2017:'AB',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
@@ -315,25 +324,309 @@ const HEATMAP_DATA = {
   '확률과통계':{2014:'A',2015:'A',2016:'A',2017:'A',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
 };
 
-// 과목별 출제 횟수
-const SUBJECT_COUNTS = {
-  '해석학':28,'위상수학':20,'현대대수학':32,'미적분학':17,
-  '미분기하학':26,'정수론':13,'복소해석학':23,'선형대수':13,
-  '이산수학':11,'확률과통계':26,
-};
-const SUBJECT_A_COUNTS = {
-  '해석학':18,'위상수학':15,'현대대수학':18,'미적분학':17,
-  '미분기하학':13,'정수론':9,'복소해석학':12,'선형대수':10,
-  '이산수학':10,'확률과통계':16,
-};
-const SUBJECT_DIFFICULTY = {
-  '해석학':85,'위상수학':80,'현대대수학':95,'미적분학':65,
-  '미분기하학':80,'정수론':70,'복소해석학':82,'선형대수':68,
-  '이산수학':70,'확률과통계':72,
+// ── 셀 클릭 팝업 상세 데이터 ──
+const CELL_DATA={
+  '해석학':{
+    exams:{
+      2014:[{type:'전공A',subject:'거듭제곱급수 수렴구간',unit:'급수 / 수렴반경'},{type:'전공A',subject:'도함수 연속성 조건',unit:'미분가능성 / 연속성'},{type:'전공A',subject:'연속함수 최댓값 달성',unit:'연속함수의 성질'}],
+      2015:[{type:'전공A',subject:'매개변수 곡선 평균값 정리',unit:'미분법 / 평균값 정리'}],
+      2016:[{type:'전공A',subject:'이상적분 수렴·발산 판별',unit:'이상적분 / 급수'},{type:'전공A',subject:'압축사상·고정점 정리 증명',unit:'미분법 / 평균값 정리'},{type:'전공B',subject:'함수항 급수 평등수렴 증명',unit:'함수열·함수항급수 / 평등수렴'}],
+      2017:[{type:'전공B',subject:'함수열 평등수렴·적분과 극한 교환',unit:'함수열 / 평등수렴'},{type:'전공B',subject:'무한번 미분가능 함수 영점 집합',unit:'테일러 급수 / 해석함수'}],
+      2018:[{type:'전공A',subject:'함수열 점별수렴·적분과 극한 교환',unit:'함수열 / 평등수렴'},{type:'전공A',subject:'합성함수 미분가능성·도함수',unit:'미분가능성'},{type:'전공B',subject:'함수항 급수 Weierstrass M-test',unit:'함수열 / 평등수렴'}],
+      2019:[{type:'전공A',subject:'매개적분 함수 극한·평등수렴 판별',unit:'함수열 / 적분'},{type:'전공B',subject:'점화식 정의 수열 유계·수렴 증명',unit:'수열의 수렴 / 단조수렴'}],
+      2020:[{type:'전공A',subject:'미분가능 함수 영점 집합 유한성',unit:'미분법 / 롤의 정리'},{type:'전공B',subject:'함수열 평등수렴·급수 극한값',unit:'함수열 / 평등수렴'}],
+      2021:[{type:'전공A',subject:'함수항 급수 평등수렴·급수 합',unit:'함수열 / 평등수렴'},{type:'전공B',subject:'연속함수 고정점 유일 존재 증명',unit:'미분법 / 평균값 정리'}],
+      2022:[{type:'전공A',subject:'거듭제곱급수 계수비·무한급수 합',unit:'급수 / 테일러 급수'},{type:'전공B',subject:'함수항 급수 적분·평등수렴 판별',unit:'함수열 / 평등수렴'}],
+      2023:[{type:'전공A',subject:'함수열 최댓값 급수 수렴반경·평등수렴',unit:'함수열 / 수렴반경'},{type:'전공B',subject:'역함수 미분·이상적분 계산',unit:'미분법 / 이상적분'}],
+      2024:[{type:'전공A',subject:'점화식 수열 급수 수렴 범위 (Stirling)',unit:'수열의 수렴 / 급수'},{type:'전공B',subject:'함수열 평등수렴·이상적분과 극한 교환',unit:'함수열 / 이상적분'}],
+      2025:[{type:'전공A',subject:'연속·미분가능성 판별 + 중간값 정리',unit:'연속함수의 성질 / 미분가능성'},{type:'전공B',subject:'함수항 급수 평등수렴·급수 합',unit:'함수열 / 평등수렴'}],
+      2026:[{type:'전공A',subject:'함수항 급수 고른수렴·연속성 판별',unit:'함수열 / 평등수렴'},{type:'전공B',subject:'상한·하한 + 이상적분 극한값',unit:'완비성 / 이상적분'}],
+    },
+    freq:[
+      {name:'함수열·함수항급수 / 평등수렴',stars:'★★★★★',count:'13회'},
+      {name:'미분법 / 평균값 정리·롤 정리',stars:'★★★★',count:'5회'},
+      {name:'급수 / 수렴판별·수렴반경',stars:'★★★★',count:'4회'},
+      {name:'이상적분',stars:'★★★★',count:'4회'},
+      {name:'연속함수의 성질',stars:'★★★',count:'3회'},
+      {name:'수열의 수렴 / 단조수렴',stars:'★★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'함수열·평등수렴 압도적 핵심',desc:'거의 매년 1~2문제 — M-test, 적분·미분과 극한 교환, 급수 합 계산',year:'2016~2026 연속'},
+      {num:'②',title:'미분법(MVT·Rolle) + 증명형',desc:'고정점 유일 존재, 영점 집합 유한성 등 대우명제·평균값 정리 활용',year:'2015~2021'},
+      {num:'③',title:'이상적분 + 극한 교환 증가',desc:'단순 계산 → 이상적분과 극한 교환 결합 고난도로 심화',year:'2019→2023→2024'},
+    ],
+  },
+  '위상수학':{
+    exams:{
+      2014:[{type:'전공A',subject:'여유한위상에서 불연속점 집합',unit:'위상의 종류 / 연속함수'},{type:'전공A',subject:'적공간에서 폐포·내부·경계',unit:'곱공간 / 내부·폐포·경계'},{type:'전공B',subject:'특수 위상(기저)에서 콤팩트 부분집합',unit:'콤팩트성'}],
+      2015:[{type:'전공A',subject:'기저로 생성된 위상에서 도집합',unit:'도집합·집적점'},{type:'전공A',subject:'여유한위상·상위상에서 연결성분',unit:'연결성 / 상위상'}],
+      2016:[{type:'전공A',subject:'혼합기저 곱공간에서 내부·폐포·경계',unit:'곱공간 / 내부·폐포·경계'}],
+      2017:[{type:'전공A',subject:'max-metric 거리위상에서 폐포·콤팩트',unit:'거리공간 / 폐포·콤팩트성'}],
+      2018:[{type:'전공A',subject:'부분공간 위상·상위상에서 열린집합·도집합',unit:'부분위상 / 도집합'}],
+      2019:[{type:'전공A',subject:'합집합 공간 기저위상에서 경계·콤팩트성',unit:'콤팩트성 / 경계'}],
+      2020:[{type:'전공A',subject:'부분기저 위상에서 연결성분·내부·폐포',unit:'연결성 / 내부·폐포'},{type:'전공B',subject:'복합 거리함수 거리계산·열린집합',unit:'거리공간'}],
+      2021:[{type:'전공A',subject:'몫위상에서 열린집합 유일성·T₁공간',unit:'몫위상 / 분리공리'},{type:'전공B',subject:'3원소 집합 위상에서 연결·비연결',unit:'연결성 / 위상의 정의'}],
+      2022:[{type:'전공B',subject:'기저위상에서 수열 극한·정규공간 증명',unit:'분리공리 / 수열수렴'}],
+      2023:[{type:'전공A',subject:'K-위상에서 도집합·콤팩트성 판별',unit:'위상의 종류 / 콤팩트성'},{type:'전공B',subject:'특수 거리함수에서 열린집합 시각화',unit:'거리공간'}],
+      2024:[{type:'전공A',subject:'ℝ⁴의 집합 콤팩트성·연결성 증명',unit:'콤팩트성 / 연결성'}],
+      2025:[{type:'전공B',subject:'여가산위상×보통위상 곱공간 내부·폐포',unit:'곱공간 / 위상의 종류'}],
+      2026:[{type:'전공A',subject:'특수 거리함수·완비성(코시수열)',unit:'거리공간 / 완비성'},{type:'전공B',subject:'상대위상 구성·내부 계산',unit:'부분위상'}],
+    },
+    freq:[
+      {name:'내부·폐포·경계',stars:'★★★★★',count:'7회'},
+      {name:'콤팩트성',stars:'★★★★★',count:'6회'},
+      {name:'거리공간 (metric space)',stars:'★★★★',count:'5회'},
+      {name:'연결성 (connected)',stars:'★★★★',count:'4회'},
+      {name:'위상의 종류·기저',stars:'★★★★',count:'4회'},
+      {name:'도집합·집적점',stars:'★★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'내부·폐포·경계 + 콤팩트성 매년 필수',desc:'특수위상(여유한·K-위상 등) 제시 후 성질 분석',year:'매년'},
+      {num:'②',title:'특수 거리함수 제시 → 성질 분석 증가',desc:'거리함수 직접 정의 후 열린집합·완비성·콤팩트성 판별',year:'2017→2020→2023→2026'},
+      {num:'③',title:'2021년 이후 추상적 위상 개념 강화',desc:'몫위상·분리공리·정규공간 등 심화 개념 비중 증가',year:'2021→2022→2026'},
+    ],
+  },
+  '현대대수학':{
+    exams:{
+      2014:[{type:'전공A',subject:'순환군 부분군 개수, 위수 38인 원소',unit:'군론 – 순환군'},{type:'전공A',subject:'Z₂₀₁₄[x]에서 x²-14의 기약성 증명',unit:'환론 – 다항식환'},{type:'전공B',subject:'x⁶+3의 Q위 분해체, 갈루아군 위수',unit:'체론 – 갈루아 이론'}],
+      2015:[{type:'전공A',subject:'Z₁₂×Z₆ 잉여군 G/H의 원소 위수',unit:'군론 – 잉여군'}],
+      2016:[{type:'전공A',subject:'군 준동형사상 핵(kernel), 잉여군 위수',unit:'군론 – 준동형사상'},{type:'전공A',subject:'단순확대체 K=Q(α), irr(α,F) 계산',unit:'체론 – 확대체'},{type:'전공B',subject:'갈루아 확대체 [K:Q]=270, 부분체 개수',unit:'체론 – 갈루아 이론'}],
+      2017:[{type:'전공A',subject:'Z₆₀의 잉여환과 체 직접곱, 환의 표수',unit:'환론 – 잉여환·표수'},{type:'전공B',subject:'[K:Q]=100 갈루아 확대, [F:Q] 계산',unit:'체론 – 갈루아 이론'}],
+      2018:[{type:'전공A',subject:'Z₁₀×Zₙ이 순환군 조건, n 개수',unit:'군론 – 순환군·직접곱'},{type:'전공A',subject:'Z₅[x]/I 위수 25, 극대아이디얼 개수',unit:'환론 – 다항식환·아이디얼'},{type:'전공B',subject:'Q위 기약다항식 분해체, G(K/Q) 아벨군',unit:'체론 – 갈루아 이론'}],
+      2019:[{type:'전공A',subject:'Z₇[x]/〈x²-x〉 잉여환 단원 개수',unit:'환론 – 잉여환·단원'},{type:'전공B',subject:'Q(a+bi) 갈루아 확대, G(K/Q) 위수',unit:'체론 – 갈루아 이론'}],
+      2020:[{type:'전공A',subject:'S₅ 원소 위수, S₅×Z₁₂ 원소 위수',unit:'군론 – 대칭군·직접곱'},{type:'전공A',subject:'Q[x]→ℝ 환 준동형사상, p(x) 결정',unit:'환론 – 다항식환·준동형'},{type:'전공B',subject:'x²⁴-1 분해체, 갈루아군 위수, irr(ζ,Q)',unit:'체론 – 갈루아 이론·원분'}],
+      2021:[{type:'전공A',subject:'G=Z₁₃*×ℂ*, 위수 18 원소, 동형 부분군',unit:'군론 – 군의 구조'},{type:'전공B',subject:'x⁵+5 분해체, Q(⁵√5) 부분체 증명',unit:'체론 – 갈루아 이론'}],
+      2022:[{type:'전공A',subject:'Z₁₁* 순환군, 생성원(generator) 구하기',unit:'군론 – 순환군·생성원'},{type:'전공A',subject:'K=Q(∛2, e^{2πi/75}) 갈루아군 위수',unit:'체론 – 갈루아 이론'},{type:'전공B',subject:'환 준동형사상 ψ, Im(ψ) 단원 개수',unit:'환론 – 준동형사상·단원'}],
+      2023:[{type:'전공A',subject:'x¹³-1 분해체 갈루아군, irr(β,Q)',unit:'체론 – 갈루아 이론·원분체'},{type:'전공B',subject:'가우스 정수환 Z[i], 아이디얼 I, 잉여환 표수',unit:'환론 – 가우스 정수·아이디얼'}],
+      2024:[{type:'전공A',subject:'순환군 잉여군 G/H 생성원·부분군 개수',unit:'군론 – 순환군·잉여군'},{type:'전공A',subject:'x²³-88 분해체 [K:Q], 체 E 개수',unit:'체론 – 갈루아 이론'},{type:'전공B',subject:'Zₙ[x]/〈x²+ax+1-a〉가 정역 조건 (n,a)',unit:'환론 – 다항식환·정역'}],
+      2025:[{type:'전공A',subject:'표수 a인 체 F, G=Z₄×F* 순환군 조건',unit:'군론+체론 – 체의 구조'},{type:'전공B',subject:'갈루아군 G(K/Q)≅Z₂×S₃, [E:Q]=6 부분체',unit:'체론 – 갈루아 이론'},{type:'전공B',subject:'가환환 Z₁₀×Z₁₂, 아이디얼 I×J, 환 S 개수',unit:'환론 – 아이디얼·환 동형'}],
+      2026:[{type:'전공A',subject:'φ: Z₂₀×Z₂₆→Z₂₀₀, Im(φ)·Ker(φ) 위수',unit:'군론 – 준동형사상·동형정리'},{type:'전공B',subject:'Z₇[x]에서 x⁴+3x²-1 기약성, 갈루아군',unit:'체론 – 유한체·갈루아 이론'}],
+    },
+    freq:[
+      {name:'체론 – 갈루아 이론(분해체·갈루아군·부분체)',stars:'★★★★★★',count:'14회'},
+      {name:'군론 (순환군·잉여군·준동형사상)',stars:'★★★★★',count:'12회'},
+      {name:'환론 (다항식환·아이디얼·잉여환·준동형)',stars:'★★★★',count:'8회'},
+    ],
+    patterns:[
+      {num:'①',title:'전공A: 군론+환론 복합',desc:'순환군 위수·생성원, 준동형 핵·상, 잉여군 + 다항식환의 아이디얼·잉여환 짝으로 출제',year:'매년 전공A'},
+      {num:'②',title:'전공B: 갈루아 이론 사실상 고정',desc:'분해체 구성 → 갈루아군 위수 → 부분체 개수 또는 기약다항식 계산의 흐름 반복',year:'매년 전공B'},
+      {num:'③',title:'최근: 증명형 복합문제 증가',desc:'유한체(Z_p 위 갈루아)·가우스 정수환 등 구체적 대수구조 소재 증가',year:'2022~2026'},
+    ],
+  },
+  '미적분학':{
+    exams:{
+      2014:[{type:'전공A',subject:'반복적분 순서 교환, ∫∫ y²sin(x⁷)dxdy',unit:'다변수 적분 / 적분순서 교환'},{type:'전공A',subject:'lim∫n²xe^{-2nx}dx, 극한과 적분의 교환',unit:'적분과 극한의 교환'}],
+      2015:[{type:'전공A',subject:'Green 정리, 단순닫힌곡선 선적분',unit:'선적분 / Green 정리'}],
+      2016:[{type:'전공A',subject:'선적분 ∫(3+ye^x)dx+e^xdy (완전미분형)',unit:'선적분 / 완전미분'},{type:'전공A',subject:'이중적분 순서 교환, 분할 정의 함수 적분',unit:'다변수 적분 / 적분순서 교환'}],
+      2017:[{type:'전공A',subject:'이중적분 ∬3cos(x³)dA, 적분순서 교환',unit:'다변수 적분 / 적분순서 교환'},{type:'전공A',subject:'다변수 함수 f(x,y)=4x−2xy+y²의 최대·최솟값',unit:'다변수 함수의 최적화'}],
+      2018:[{type:'전공A',subject:'변수변환(Jacobian), 이중적분 계산',unit:'다변수 적분 / 변수변환'}],
+      2019:[{type:'전공A',subject:'f(x,y)=x^n·y^n/(x^30+y^30) 원점 연속 조건',unit:'다변수 함수의 연속성'},{type:'전공A',subject:'영역 D_n에서 lim ∬e^{-⌊(x-y)²+x²⌋}dxdy',unit:'다변수 적분 / 극한'}],
+      2020:[{type:'전공A',subject:'Green 정리 이용 선적분 ∫(−ydx+xdy)',unit:'선적분 / Green 정리'}],
+      2021:[{type:'전공A',subject:'복잡한 반복적분 영역 재구성, 극좌표 변환',unit:'다변수 적분 / 적분순서 교환·극좌표'}],
+      2022:[{type:'전공A',subject:'g(t)=(1/π)∬(x²+y²+1)^t dxdy, 극좌표',unit:'다변수 적분 / 극좌표'}],
+      2023:[{type:'전공A',subject:'이중적분·삼중적분 극좌표·원통좌표 변환',unit:'다변수 적분 / 좌표변환'}],
+      2024:[{type:'전공A',subject:'g(t)=∬f(x,y)dxdy, g(0)과 g\'(1/2) 계산',unit:'다변수 적분 / 매개변수 미분'}],
+      2025:[{type:'전공A',subject:'Green 정리, 영역 넓이 조건으로 a 결정',unit:'선적분 / Green 정리'}],
+      2026:[{type:'전공A',subject:'등위곡선, 영역 넓이 (이상적분·극좌표·변수변환)',unit:'다변수 함수 / 이중적분·이상적분'}],
+    },
+    freq:[
+      {name:'다변수 적분 – 적분순서 교환',stars:'★★★★★',count:'7회'},
+      {name:'다변수 적분 – 좌표변환(극좌표·Jacobian)',stars:'★★★★',count:'6회'},
+      {name:'선적분 / Green 정리',stars:'★★★★',count:'5회'},
+      {name:'다변수 함수의 연속성·극한',stars:'★★★',count:'3회'},
+      {name:'적분과 극한의 교환 / 매개변수 미분',stars:'★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'전공A 독점 과목',desc:'미적분학은 전공A에서만 출제, 전공B 문제 없음',year:'매년 전공A'},
+      {num:'②',title:'이중적분 순서교환 + Green 정리 매년 핵심',desc:'거의 매년 둘 중 하나, 같은 해 함께 출제되기도 함',year:'2015, 2020, 2025'},
+      {num:'③',title:'최근: 좌표변환 + 극한·매개변수 미분 복합',desc:'단순 계산 → 복합문제로 심화',year:'2022~2026'},
+    ],
+  },
+  '미분기하학':{
+    exams:{
+      2014:[{type:'전공A',subject:'Frenet-Serret 틀, β=∫N(t)dt의 곡률·비틀림',unit:'공간곡선론'},{type:'전공B',subject:'Gauss-Bonnet 정리, 측지곡률합(포물면)',unit:'곡면의 전체곡률'}],
+      2015:[{type:'전공A',subject:'두 곡선의 합동 조건 (상수 a, b 결정)',unit:'공간곡선론'},{type:'전공B',subject:'주곡률, 가우스 곡률, 법곡률(Euler 공식)',unit:'곡면의 곡률'}],
+      2016:[{type:'전공A',subject:'단위속력곡선, 파생곡선의 길이',unit:'공간곡선론'},{type:'전공B',subject:'원뿔 위 측지선의 곡률, 주곡률',unit:'측지선 / 곡면의 곡률'}],
+      2017:[{type:'전공A',subject:'평면곡선, β=½T+N으로 정의된 곡선의 길이·곡률',unit:'공간곡선론'},{type:'전공B',subject:'두 곡면 교선 매개변수화, 측지곡률',unit:'측지선 / 교선'}],
+      2018:[{type:'전공A',subject:'단위속력곡선, β=∫(α+s²N)ds, 곡률',unit:'공간곡선론'},{type:'전공B',subject:'주곡률, 법곡률(Euler 공식), 제1·2기본형식',unit:'곡면의 곡률'}],
+      2019:[{type:'전공A',subject:'비틀림, 곡률, 두 조건 동시 만족하는 상수',unit:'공간곡선론'},{type:'전공B',subject:'곡면의 접평면 조건, 가우스 곡률',unit:'곡면의 곡률'}],
+      2020:[{type:'전공A',subject:'접선벡터 평행 조건, 비틀림·곡률 계산',unit:'공간곡선론'},{type:'전공B',subject:'접평면 방정식, 평균곡률(제1·2기본형식)',unit:'곡면의 곡률'}],
+      2021:[{type:'전공A',subject:'구면 위 단위속력곡선, 비틀림·곡률',unit:'공간곡선론'},{type:'전공B',subject:'회전면의 가우스 곡률, 가우스 전곡률 ∬K dA',unit:'곡면의 전체곡률'}],
+      2022:[{type:'전공A',subject:'Frenet 틀 이용 β=∫(τT+κB)ds, 곡률',unit:'공간곡선론'},{type:'전공B',subject:'법곡률 적분, 주곡률, Euler 공식',unit:'곡면의 곡률'}],
+      2023:[{type:'전공A',subject:'2차원 평면곡선, 접촉원(중심·반지름)',unit:'평면곡선론'},{type:'전공B',subject:'두 곡면 교선의 측지곡률·법곡률',unit:'측지선 / 곡면의 곡률'}],
+      2024:[{type:'전공A',subject:'공간곡선 접선, 매개변수 결정, 곡률 계산',unit:'공간곡선론'},{type:'전공B',subject:'가우스 곡률, 가우스 전곡률 ∬K dA (타원면)',unit:'곡면의 전체곡률'}],
+      2025:[{type:'전공A',subject:'접평면 방정식, 가우스 곡률·평균곡률',unit:'곡면의 곡률'},{type:'전공B',subject:'극방정식 평면곡선의 길이·전곡률',unit:'평면곡선론'}],
+      2026:[{type:'전공A',subject:'단위속력곡선 조건, 곡률·비틀림 계산',unit:'공간곡선론'},{type:'전공B',subject:'회전면, 측지곡률 조건, 가우스 곡률',unit:'측지선 / 곡면의 전체곡률'}],
+    },
+    freq:[
+      {name:'공간곡선론 (곡률·비틀림·Frenet 틀)',stars:'★★★★★★',count:'13회'},
+      {name:'곡면의 곡률 (주곡률·가우스·평균·법곡률)',stars:'★★★★★',count:'10회'},
+      {name:'곡면의 전체곡률 (∬K dA, Gauss-Bonnet)',stars:'★★★★',count:'5회'},
+      {name:'측지선·측지곡률',stars:'★★★',count:'5회'},
+      {name:'평면곡선론 (접촉원, 극방정식, 전곡률)',stars:'★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'전공A: 공간곡선론 매년 고정',desc:'Frenet-Serret 공식으로 파생곡선 β 정의 → 곡률·비틀림 계산 유형 반복',year:'매년 전공A'},
+      {num:'②',title:'전공B: 곡면의 곡률 + 전체곡률',desc:'주곡률·법곡률·Euler 공식 핵심, 최근 측지곡률 조건과 결합 복합문제 증가',year:'매년 전공B'},
+      {num:'③',title:'최근: 전체곡률(∬K dA)·Gauss-Bonnet 증가',desc:'회전면(surface of revolution) 소재 문제 자주 등장',year:'2021, 2024, 2026'},
+    ],
+  },
+  '정수론':{
+    exams:{
+      2014:[{type:'전공A',subject:'m¹⁸≡21(mod 100) → m²⁹⁴ 마지막 두 자리',unit:'오일러 정리 / 합동식'}],
+      2015:[{type:'전공A',subject:'x³−8≡0(mod 2015) 해의 개수 (CRT)',unit:'다항 합동방정식 / CRT'}],
+      2016:[{type:'전공A',subject:'원시근 23(mod 89), aⁿ≡23 최소 n (이산로그)',unit:'원시근 / 이산로그'}],
+      2017:[{type:'전공A',subject:'르장드르 기호 합 Σ(aₖ/2017) 계산',unit:'르장드르 기호 / 이차잉여'}],
+      2018:[{type:'전공A',subject:'x^(n+5)−xⁿ−x⁵+1≡0(mod 131) n 개수',unit:'다항 합동방정식 / 페르마'}],
+      2019:[{type:'전공B',subject:'집합 Tₘ 원소 개수 조건 → m 개수 (φ함수)',unit:'오일러 φ-함수 / 원시근'}],
+      2020:[{type:'전공A',subject:'x≡25⁹⁹(mod 19·13) + 연립합동방정식',unit:'CRT / 합동식'}],
+      2021:[{type:'전공A',subject:'(x¹⁰−1)(x¹⁰+x⁵+1)(x³⁶−1)≡0(mod 61) 해',unit:'다항 합동방정식 / 원시근'}],
+      2022:[{type:'전공B',subject:'x⁵≡23(mod 35) 정수해 풀이 (CRT+페르마)',unit:'다항 합동방정식 / CRT'}],
+      2023:[{type:'전공B',subject:'x²+23x−k≡0(mod 75) 해 없는 k값',unit:'이차 합동방정식 / 이차잉여'}],
+      2024:[{type:'전공B',subject:'원시근 r(mod p), r^(ab) 조건 순서쌍 → p값',unit:'원시근 / 위수(order)'}],
+      2025:[{type:'전공A',subject:'원시근 5(mod 157), x⁶+1≡0 해 개수 + 르장드르',unit:'원시근 / 르장드르 기호 / 이차잉여'}],
+      2026:[{type:'전공B',subject:'21x≡45(mod 66), x³−1≡0(mod 151) 해 개수',unit:'일차·다항 합동방정식 / 위수'}],
+    },
+    freq:[
+      {name:'다항 합동방정식 (해의 개수)',stars:'★★★★★',count:'5회'},
+      {name:'중국인 나머지 정리 (CRT)',stars:'★★★★',count:'4회'},
+      {name:'원시근 / 위수(order)',stars:'★★★★',count:'4회'},
+      {name:'이차잉여 / 르장드르 기호',stars:'★★★',count:'3회'},
+      {name:'오일러 정리 / φ-함수',stars:'★★★',count:'3회'},
+      {name:'페르마 소정리',stars:'★★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'다항 합동방정식 + CRT 조합이 핵심 축',desc:'가장 자주 출제 — 해의 개수 계산에 CRT·소인수분해 필수',year:'매년'},
+      {num:'②',title:'원시근·위수 개념 매년 활용',desc:'원시근 판별, 이산로그, 위수 조건 → 해 개수 결정 흐름',year:'2016, 2019, 2021, 2024~2026'},
+      {num:'③',title:'이차잉여·르장드르 기호 주기적 고난도',desc:'2017년 이후 주기적 등장, 난이도 높은 계산형',year:'2017, 2023, 2025'},
+    ],
+  },
+  '복소해석학':{
+    exams:{
+      2014:[{type:'전공B',subject:'복소적분 선형사상·핵·역상 (단위원)',unit:'복소적분 / 코시 적분'}],
+      2015:[{type:'전공A',subject:'Jordan 보조정리 + 유수정리로 실적분',unit:'유수정리 / 실적분'}],
+      2016:[{type:'전공B',subject:'테일러 급수 계수 홀수항=0 + 코시 적분공식',unit:'테일러·로랑 급수 / 코시 적분'}],
+      2017:[{type:'전공A',subject:'C-R 방정식으로 해석적 조건 n 결정 + f\'(1)',unit:'코시-리만 방정식 / 해석함수'},{type:'전공A',subject:'제거 가능 특이점 증명 + 해석적 연속',unit:'특이점 / 해석적 연속'}],
+      2018:[{type:'전공A',subject:'일차분수변환(뫼비우스 변환) T(2i) 계산',unit:'일차분수변환'},{type:'전공B',subject:'정함수 조건 + 리우빌 정리로 f\'(0) 계산',unit:'리우빌 정리 / 정함수'}],
+      2019:[{type:'전공A',subject:'매개변수 경로의 복소선적분 계산',unit:'복소선적분'},{type:'전공B',subject:'C-R 방정식·조화함수로 정함수 결정 + f(0)',unit:'코시-리만 방정식 / 조화함수'}],
+      2020:[{type:'전공A',subject:'테일러 3차 다항식 + 코시 적분공식으로 유수',unit:'테일러·로랑 급수 / 코시 적분'},{type:'전공B',subject:'정함수 조건에서 최솟값 원리로 |f(i)| 계산',unit:'최대·최솟값 원리 / 정함수'}],
+      2021:[{type:'전공A',subject:'최대·최솟값 원리 적용 |f(z)| 범위',unit:'최대·최솟값 원리'},{type:'전공B',subject:'편각 원리(영점 개수) + 유수정리로 선적분',unit:'편각 원리 / 유수정리'}],
+      2022:[{type:'전공A',subject:'유수정리 + 켤레복소수 포함 경로적분',unit:'유수정리 / 복소선적분'},{type:'전공B',subject:'C-R 방정식으로 정함수 조건 a,b + f\'\'(π/2)',unit:'코시-리만 방정식 / 해석함수'}],
+      2023:[{type:'전공A',subject:'조화함수 + 평균값 정리로 적분 + 최솟값',unit:'조화함수 / 최대·최솟값 원리'},{type:'전공B',subject:'루셰 정리로 영점 개수 + 유수정리 선적분',unit:'루셰 정리 / 유수정리'}],
+      2024:[{type:'전공A',subject:'켤레 포함 경로적분 직접 계산 (단위원)',unit:'복소선적분'},{type:'전공B',subject:'C-R 방정식 + 정함수 조건 + 편각 원리',unit:'코시-리만 방정식 / 편각 원리'}],
+      2025:[{type:'전공A',subject:'일차분수변환 T(z) + 상(image) 최솟값 거리',unit:'일차분수변환'},{type:'전공B',subject:'C-R 방정식으로 정함수 + 코시 적분공식',unit:'코시-리만 방정식 / 코시 적분'}],
+      2026:[{type:'전공A',subject:'영점·극점 위수 + 편각 원리로 f\'/f 적분',unit:'편각 원리 / 유수정리'},{type:'전공B',subject:'C-R 방정식 + 로랑 급수 a₋₁ 계산',unit:'코시-리만 방정식 / 로랑 급수'}],
+    },
+    freq:[
+      {name:'코시-리만 방정식 / 해석함수',stars:'★★★★★',count:'8회'},
+      {name:'유수정리 / 복소선적분',stars:'★★★★★',count:'6회'},
+      {name:'코시 적분공식',stars:'★★★★',count:'4회'},
+      {name:'테일러·로랑 급수',stars:'★★★★',count:'4회'},
+      {name:'편각 원리 / 루셰 정리',stars:'★★★',count:'4회'},
+      {name:'조화함수 / 최대·최솟값 원리',stars:'★★★',count:'4회'},
+    ],
+    patterns:[
+      {num:'①',title:'C-R 방정식 + 유수정리 양대 핵심',desc:'C-R 방정식으로 해석함수·정함수 조건 결정 후 코시 공식·유수정리 계산',year:'매년'},
+      {num:'②',title:'편각 원리·루셰 정리 2021년 이후 단골',desc:'영점·극점 개수 파악 후 유수정리 연계 문제 꾸준히 증가',year:'2021→2023→2024→2026'},
+      {num:'③',title:'일차분수변환 2~3년 주기 반복',desc:'뫼비우스 변환 T(z) 결정 + 상(image) 계산',year:'2018, 2025'},
+    ],
+  },
+  '선형대수':{
+    exams:{
+      2014:[{type:'전공A',subject:'이차형식 회전변환 후 쌍곡선 판별',unit:'이차형식 / 대각화'}],
+      2015:[{type:'전공A',subject:'직선축 180° 회전변환 행렬의 특성다항식',unit:'선형변환 / 고유다항식'}],
+      2016:[{type:'전공B',subject:'반사변환(Householder) 행렬 + 기저 행렬표현',unit:'선형변환 / 내적공간'}],
+      2017:[{type:'전공B',subject:'Gram-Schmidt 정규직교기저 + 기저변환 행렬식',unit:'내적공간 / 정규직교화'}],
+      2018:[{type:'전공B',subject:'고유벡터 합의 일차독립 증명 + 고유값으로 행렬식',unit:'고유값·고유벡터 / 행렬식'}],
+      2019:[{type:'전공A',subject:'정사영 변환 + 역변환 불가능 k값 + 랭크',unit:'선형변환 / 정사영 / 랭크'}],
+      2020:[{type:'전공B',subject:'고유값 계산 + 대각화 기저 결정',unit:'고유값·고유벡터 / 대각화'}],
+      2021:[{type:'전공B',subject:'A=PDP⁻¹ 대각화 + Aⁿ 성분 계산',unit:'대각화 / 행렬의 거듭제곱'}],
+      2022:[{type:'전공A',subject:'정사각행렬 조건에서 고유값 결정 + 행 원소합',unit:'고유값·고유벡터 / 대칭행렬'}],
+      2023:[{type:'전공A',subject:'순서 기저 선형변환 행렬표현 + 대각화 판별',unit:'선형변환 / 대각화'}],
+      2024:[{type:'전공A',subject:'행렬의 고유값·trace·행렬식 + 최소다항식',unit:'고유값 / 최소다항식 / 케일리-해밀턴'}],
+      2025:[{type:'전공A',subject:'대칭행렬의 직교대각화 D,P 구성 (영공간 조건)',unit:'대칭행렬 / 직교대각화'}],
+      2026:[{type:'전공A',subject:'고유값 계산 + 대칭행렬 직교대각화 기저 구성',unit:'고유값·고유벡터 / 직교대각화'}],
+    },
+    freq:[
+      {name:'고유값·고유벡터',stars:'★★★★★',count:'8회'},
+      {name:'대각화 (PDP⁻¹)',stars:'★★★★★',count:'6회'},
+      {name:'선형변환 / 행렬표현',stars:'★★★★',count:'4회'},
+      {name:'대칭행렬 / 직교대각화',stars:'★★★★',count:'3회'},
+      {name:'내적공간 / 정규직교화',stars:'★★★',count:'2회'},
+      {name:'이차형식',stars:'★★',count:'1회'},
+    ],
+    patterns:[
+      {num:'①',title:'고유값·대각화 13년 연속 절대 핵심',desc:'특성다항식 → 고유값 → 대각화 가능 판별 → PDP⁻¹ 구성의 흐름 반복',year:'매년'},
+      {num:'②',title:'직교대각화(대칭행렬) 2022년 이후 매년',desc:'대칭행렬 직교대각화 D, P 구성 + 영공간 조건 활용',year:'2022~2026'},
+      {num:'③',title:'2024년부터 최소다항식·케일리-해밀턴 심화',desc:'trace·행렬식·최소다항식 복합 고난도 문제',year:'2024~'},
+    ],
+  },
+  '이산수학':{
+    exams:{
+      2014:[{type:'전공A',subject:'정수해 개수의 생성함수 (제한 조건 포함)',unit:'생성함수 / 경우의 수'}],
+      2015:[{type:'전공B',subject:'그래프 변의 개수, 평면그래프 판별, 채색수 χ(G)',unit:'그래프 이론'}],
+      2016:[{type:'전공A',subject:'점화식 수열의 생성함수, 급수값 계산',unit:'점화식 / 생성함수'}],
+      2017:[{type:'전공A',subject:'그래프 인접행렬(adjacency matrix) 성분 합',unit:'그래프 이론'}],
+      2018:[{type:'전공A',subject:'점화식 특성다항식(고유다항식), 수열의 일반항',unit:'점화식 / 선형점화식'}],
+      2019:[{type:'전공A',subject:'이분그래프와 완전매칭, 배치 경우의 수',unit:'그래프 이론 / 매칭'}],
+      2020:[],
+      2021:[{type:'전공A',subject:'일반화된 이항계수, 이항급수 합 계산',unit:'이항계수 / 생성함수'}],
+      2022:[{type:'전공A',subject:'근접행렬, 라플라시안 행렬, 행렬식, walk 개수',unit:'그래프 이론 / 행렬'}],
+      2023:[{type:'전공A',subject:'점화식 지수생성함수(EGF), 수열 일반항',unit:'점화식 / 생성함수'}],
+      2024:[{type:'전공B',subject:'점화식 생성함수(피보나치 변형), 멱급수 계수',unit:'점화식 / 생성함수'}],
+      2025:[{type:'전공A',subject:'단순그래프 차수 조건, 채색수, 변의 개수 최대화',unit:'그래프 이론'}],
+      2026:[{type:'전공A',subject:'점화식 특성다항식·일반항·생성함수 4단계 복합',unit:'점화식 / 생성함수'}],
+    },
+    freq:[
+      {name:'생성함수 (일반/지수)',stars:'★★★★★',count:'7회'},
+      {name:'점화식 (선형점화식/특성다항식)',stars:'★★★★★',count:'6회'},
+      {name:'그래프 이론 (채색수/인접행렬/매칭)',stars:'★★★★★',count:'6회'},
+      {name:'이항계수 / 경우의 수',stars:'★★★',count:'2회'},
+    ],
+    patterns:[
+      {num:'①',title:'생성함수 + 점화식 복합 최고 빈출',desc:'점화식 세우기 → 생성함수 f(x) 구하기 → 급수값 또는 일반항 도출',year:'2016, 2018, 2023, 2024, 2026'},
+      {num:'②',title:'그래프 이론 격년 출제 경향',desc:'채색수(2015·2025), 인접행렬/라플라시안(2017·2022), 매칭/배치(2019)',year:'2015~2025'},
+      {num:'③',title:'최근 트렌드 (2023~2026)',desc:'EGF 명시(2023), 멱급수 계수 추출(2024), 채색수 심화(2025), 4단계 복합(2026)',year:'2023~2026'},
+    ],
+  },
+  '확률과통계':{
+    exams:{
+      2014:[{type:'전공A',subject:'이항분포의 정규근사, 표준화 P(80≤X≤92)',unit:'이항분포 / 정규분포'},{type:'전공A',subject:'결합확률밀도함수, 주변밀도함수, 조건부기댓값 E[X|Y=2]',unit:'결합분포 / 조건부분포'}],
+      2015:[{type:'전공A',subject:'정규분포 선형변환 Y=(2/5)X+α, 표준화',unit:'정규분포'},{type:'전공A',subject:'독립 연속확률변수 함수 M=⌊X/Y⌋, P(M=2)',unit:'확률변수 함수의 분포'}],
+      2016:[{type:'전공A',subject:'이항분포 조건부확률 (동전 n번, 조건부 앞면 1회)',unit:'이항분포 / 조건부확률'},{type:'전공A',subject:'독립 지수분포 합의 분포 Z=X+2Y, PDF',unit:'확률변수 함수의 분포'}],
+      2017:[{type:'전공A',subject:'연속확률변수 최솟값 Y=min{X₁,X₂}, P(Y<5/2)',unit:'순서통계량'},{type:'전공A',subject:'균등분포 합의 분포 Z=X+Y, PDF와 기댓값',unit:'확률변수 함수의 분포'}],
+      2018:[{type:'전공A',subject:'결합확률분포(이산) 조건부기댓값 E[X|Y=1]',unit:'결합분포 / 조건부분포'},{type:'전공B',subject:'두 정규분포 선형결합 T=(X+Y)/2, 표준화, 신뢰구간',unit:'정규분포 / 추정'}],
+      2019:[{type:'전공A',subject:'지수분포 시스템 최솟값 Z=min{X,Y}, P(Z>10)',unit:'순서통계량 / 지수분포'},{type:'전공B',subject:'표본평균 분포, 표본분산 c 결정, 90% 신뢰구간',unit:'표본분포 / 추정'}],
+      2020:[{type:'전공A',subject:'점화식 생성함수 → 연속확률밀도함수, 기댓값',unit:'확률변수 함수의 분포'},{type:'전공B',subject:'균등분포 변수변환 Y=2ln(3/(3-X)), CDF·PDF',unit:'확률변수 함수의 분포'}],
+      2021:[{type:'전공A',subject:'두 정규분포 표본평균 차 X̄-Ȳ 분산, 표준화',unit:'표본분포 / 정규분포'},{type:'전공B',subject:'균등분포 순서통계량 중앙값(median), CDF·PDF',unit:'순서통계량'}],
+      2022:[{type:'전공A',subject:'결합확률질량함수, p·(1/q) 값, 조건부확률',unit:'결합분포 / 조건부분포'},{type:'전공B',subject:'MGF M(t)=1/(1-2t)⁴, 분산 및 중심극한정리',unit:'적률생성함수 / 중심극한정리'}],
+      2023:[{type:'전공A',subject:'두 표본비율 평균 (p₁+p₂)/2의 90% 신뢰구간',unit:'추정 (신뢰구간)'},{type:'전공B',subject:'결합밀도함수, 변수변환 Z=Y-X, CDF G(z)·PDF g(z)',unit:'확률변수 함수의 분포'}],
+      2024:[{type:'전공A',subject:'연속 CDF F(x) 순증가, F(X)의 PDF, P(-2<lnF(X)<1)',unit:'확률변수 함수의 분포'},{type:'전공B',subject:'포아송분포(λ=5) 표본분산 기댓값=140, n 결정',unit:'포아송분포 / 표본분포'}],
+      2025:[{type:'전공A',subject:'표준정규 선형결합 Y=Σ(-1)^(i+1)Xᵢ, 분산 V(Y), a',unit:'정규분포 / 표본분포'},{type:'전공B',subject:'결합밀도함수 독립성 판별, 조건부확률 P(X≤2|Y≤2)',unit:'결합분포 / 독립성'}],
+      2026:[{type:'전공A',subject:'두 정규분포 합 X+Y 표준편차, μ₁+μ₂의 95% 신뢰구간',unit:'정규분포 / 추정'},{type:'전공B',subject:'혼합형 PDF, 상수 c, P(X≥4), 이항분포 응용',unit:'연속분포 / 이항분포'}],
+    },
+    freq:[
+      {name:'결합분포 / 조건부분포',stars:'★★★★★',count:'8회'},
+      {name:'확률변수 함수의 분포 (변수변환)',stars:'★★★★★',count:'8회'},
+      {name:'정규분포 / 표본분포',stars:'★★★★',count:'7회'},
+      {name:'추정 (신뢰구간)',stars:'★★★★',count:'5회'},
+      {name:'순서통계량',stars:'★★★',count:'3회'},
+      {name:'이항분포 / 포아송분포',stars:'★★',count:'3회'},
+    ],
+    patterns:[
+      {num:'①',title:'결합분포 + 조건부 최고 빈출',desc:'결합PDF/PMF → 주변분포 → 조건부기댓값 3단계 구조',year:'2014, 2018, 2022, 2025'},
+      {num:'②',title:'확률변수 함수의 분포 (변수변환법)',desc:'CDF법(누적분포함수 미분), 지수분포 합/최솟값, 균등분포 변환',year:'2016, 2019A, 2020B, 2023B, 2024A'},
+      {num:'③',title:'정규분포 표준화 + 신뢰구간 복합',desc:'표본평균의 분포 → 표준화 → 신뢰구간 도출',year:'2018B, 2019B, 2021A, 2023A, 2026A'},
+      {num:'④',title:'최근 트렌드 (2022~2026)',desc:'MGF 명시(2022B), CDF 순증가 변수변환(2024A), 포아송 표본분산(2024B), 독립성 판별(2025B)',year:'2022~2026'},
+    ],
+  },
 };
 
-// 취약단원 데이터 (★★★★★ 이상 단원)
-const TOP_UNITS = [
+// 과목별 출제 횟수
+const SUBJECT_COUNTS={'해석학':28,'위상수학':20,'현대대수학':32,'미적분학':17,'미분기하학':26,'정수론':13,'복소해석학':23,'선형대수':13,'이산수학':11,'확률과통계':26};
+const SUBJECT_A_COUNTS={'해석학':18,'위상수학':15,'현대대수학':18,'미적분학':17,'미분기하학':13,'정수론':9,'복소해석학':12,'선형대수':10,'이산수학':10,'확률과통계':16};
+const SUBJECT_DIFFICULTY={'해석학':85,'위상수학':80,'현대대수학':95,'미적분학':65,'미분기하학':80,'정수론':70,'복소해석학':82,'선형대수':68,'이산수학':70,'확률과통계':72};
+const TOP_UNITS=[
   {subject:'현대대수학',unit:'체론 – 갈루아 이론',stars:6,count:14},
   {subject:'해석학',unit:'함수열·함수항급수 / 평등수렴',stars:5,count:13},
   {subject:'미분기하학',unit:'공간곡선론 (곡률·비틀림·Frenet 틀)',stars:6,count:13},
@@ -345,34 +638,16 @@ const TOP_UNITS = [
   {subject:'선형대수',unit:'고유값·고유벡터',stars:5,count:8},
   {subject:'위상수학',unit:'내부·폐포·경계',stars:5,count:7},
 ];
-
-// 최근 3년 트렌드
-const RECENT_TRENDS = {
-  2024:[
-    {text:'연속 CDF 순증가 조건 활용 변수변환',isNew:true,subject:'확률통계'},
-    {text:'대칭행렬 최소다항식·케일리-해밀턴 심화',isNew:true,subject:'선형대수'},
-    {text:'포아송분포 표본분산 기댓값',isNew:true,subject:'확률통계'},
-    {text:'점화식 생성함수 멱급수 계수 추출',isNew:false,subject:'이산수학'},
-  ],
-  2025:[
-    {text:'결합밀도함수 독립성 판별 명시 출제',isNew:true,subject:'확률통계'},
-    {text:'그래프 채색수 + 차수 조건 최대화 심화',isNew:false,subject:'이산수학'},
-    {text:'대칭행렬 직교대각화 매년 고정',isNew:false,subject:'선형대수'},
-    {text:'갈루아군 G(K/Q)≅Z₂×S₃ 복합',isNew:false,subject:'현대대수'},
-  ],
-  2026:[
-    {text:'점화식 4단계 복합 (특성다항식→일반항→생성함수→계수)',isNew:true,subject:'이산수학'},
-    {text:'등위곡선 + 이상적분 연결 고난도',isNew:true,subject:'미적분학'},
-    {text:'혼합형 PDF + 이항분포 응용',isNew:true,subject:'확률통계'},
-    {text:'편각 원리로 f\'/f 적분 계산',isNew:false,subject:'복소해석'},
-  ],
+const RECENT_TRENDS={
+  2024:[{text:'연속 CDF 순증가 조건 활용 변수변환',isNew:true,subject:'확률통계'},{text:'대칭행렬 최소다항식·케일리-해밀턴 심화',isNew:true,subject:'선형대수'},{text:'포아송분포 표본분산 기댓값',isNew:true,subject:'확률통계'},{text:'점화식 생성함수 멱급수 계수 추출',isNew:false,subject:'이산수학'}],
+  2025:[{text:'결합밀도함수 독립성 판별 명시 출제',isNew:true,subject:'확률통계'},{text:'그래프 채색수 + 차수 조건 최대화 심화',isNew:false,subject:'이산수학'},{text:'대칭행렬 직교대각화 매년 고정',isNew:false,subject:'선형대수'},{text:'갈루아군 G(K/Q)≅Z₂×S₃ 복합',isNew:false,subject:'현대대수'}],
+  2026:[{text:'점화식 4단계 복합 (특성다항식→일반항→생성함수→계수)',isNew:true,subject:'이산수학'},{text:'등위곡선 + 이상적분 연결 고난도',isNew:true,subject:'미적분학'},{text:'혼합형 PDF + 이항분포 응용',isNew:true,subject:'확률통계'},{text:'편각 원리로 f\'/f 적분 계산',isNew:false,subject:'복소해석'}],
 };
 
-let state = {units:[],records:[]};
-let analysisCache = {};
-let hmFilter = 'all';
-let currentAnalysisTab = 'heatmap';
-let currentTab = 'today';
+let state={units:[],records:[]};
+let hmFilter='all';
+let currentAnalysisTab='heatmap';
+let currentTab='today';
 
 function today(){return new Date().toISOString().split('T')[0]}
 function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().split('T')[0]}
@@ -385,26 +660,18 @@ async function apiPost(body){const r=await fetch(API_URL,{method:'POST',body:JSO
 
 function parseUnits(rows){
   if(!rows||rows.length<2)return[];
-  return rows.slice(1).filter(r=>r[0]).map(r=>({
-    id:Number(r[0]),sid:String(r[1]),name:String(r[2]),date:String(r[3]),
-    reviews:[r[4],r[5],r[6],r[7],r[8],r[9]].map(v=>v===true||v==='TRUE'||v===1)
-  }));
+  return rows.slice(1).filter(r=>r[0]).map(r=>({id:Number(r[0]),sid:String(r[1]),name:String(r[2]),date:String(r[3]),reviews:[r[4],r[5],r[6],r[7],r[8],r[9]].map(v=>v===true||v==='TRUE'||v===1)}));
 }
 function parseRecords(rows){
   if(!rows||rows.length<2)return[];
-  return rows.slice(1).filter(r=>r[0]).map(r=>({
-    id:Number(r[0]),sid:String(r[1]),unitName:String(r[2]||''),
-    date:String(r[3]),source:String(r[4]||''),
-    correct:Number(r[5]||0),total:Number(r[6]||0),memo:String(r[7]||'')
-  }));
+  return rows.slice(1).filter(r=>r[0]).map(r=>({id:Number(r[0]),sid:String(r[1]),unitName:String(r[2]||''),date:String(r[3]),source:String(r[4]||''),correct:Number(r[5]||0),total:Number(r[6]||0),memo:String(r[7]||'')}));
 }
 
 async function loadData(){
   try{
     setSyncStatus('syncing','데이터 불러오는 중...');
     const[uRows,rRows]=await Promise.all([apiGet('getUnits'),apiGet('getRecords')]);
-    state.units=parseUnits(uRows);
-    state.records=parseRecords(rRows);
+    state.units=parseUnits(uRows);state.records=parseRecords(rRows);
     setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`);
     document.getElementById('loading-overlay').style.display='none';
     renderAll();
@@ -416,12 +683,10 @@ async function loadData(){
 }
 
 function renderHeader(){
-  const now=new Date();
-  const diff=Math.ceil((EXAM_DATE-now)/86400000);
+  const now=new Date();const diff=Math.ceil((EXAM_DATE-now)/86400000);
   document.getElementById('dday').textContent=diff>0?`D-${diff}`:'D-Day!';
   const totalDays=Math.ceil((EXAM_DATE-new Date('2025-06-01'))/86400000);
-  const passed=totalDays-diff;
-  const pct=Math.min(100,Math.max(0,Math.round(passed/totalDays*100)));
+  const pct=Math.min(100,Math.max(0,Math.round((totalDays-diff)/totalDays*100)));
   document.getElementById('overall-progress').style.width=pct+'%';
 }
 
@@ -429,23 +694,14 @@ function switchTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
-  btn.classList.add('active');
-  currentTab=name;
-  renders[name]();
+  btn.classList.add('active');currentTab=name;renders[name]();
 }
 
 // ── 오늘 ──
 function renderToday(){
-  const td=today();
-  const items=[];
-  state.units.forEach(u=>{
-    REVIEW_INTERVALS.forEach((interval,idx)=>{
-      const due=addDays(u.date,interval);
-      if(!u.reviews[idx]&&due<=td) items.push({unit:u,idx,due,overdue:due<td});
-    });
-  });
-  const todayCnt=items.filter(i=>!i.overdue).length;
-  const overdueCnt=items.filter(i=>i.overdue).length;
+  const td=today();const items=[];
+  state.units.forEach(u=>{REVIEW_INTERVALS.forEach((interval,idx)=>{const due=addDays(u.date,interval);if(!u.reviews[idx]&&due<=td)items.push({unit:u,idx,due,overdue:due<td})})});
+  const todayCnt=items.filter(i=>!i.overdue).length;const overdueCnt=items.filter(i=>i.overdue).length;
   const doneCnt=state.units.reduce((a,u)=>a+u.reviews.filter(Boolean).length,0);
   const totalItems=state.units.length*REVIEW_INTERVALS.length;
   const pct=totalItems>0?Math.round(doneCnt/totalItems*100):0;
@@ -465,25 +721,16 @@ function renderToday(){
     <div class="stat-card"><div class="stat-val red">${overdueCnt}</div><div class="stat-lbl">밀린 복습</div></div>
     <div class="stat-card"><div class="stat-val green">${state.units.length}</div><div class="stat-lbl">등록 단원</div></div>
   </div>`;
-  if(!items.length){
-    html+=`<div class="section-title">오늘 할 일</div><div class="empty-state">오늘 복습할 항목이 없어요 ✓<br><small>단원을 추가하면 자동으로 생성돼요</small></div>`;
-  }else{
-    if(overdueCnt>0){
-      html+=`<div class="section-title" style="color:var(--danger)">밀린 복습 ${overdueCnt}개</div>`;
-      items.filter(i=>i.overdue).forEach(item=>{html+=todayItemHTML(item,`${daysDiff(item.due,td)}일 밀림`,'badge-red')});
-    }
-    if(todayCnt>0){
-      html+=`<div class="section-title" style="margin-top:${overdueCnt>0?'16px':'0'}">오늘 복습 ${todayCnt}개</div>`;
-      items.filter(i=>!i.overdue).forEach(item=>{html+=todayItemHTML(item,INTERVAL_LABELS[item.idx]+' 복습','badge-blue')});
-    }
+  if(!items.length){html+=`<div class="section-title">오늘 할 일</div><div class="empty-state">오늘 복습할 항목이 없어요 ✓<br><small>단원을 추가하면 자동으로 생성돼요</small></div>`}
+  else{
+    if(overdueCnt>0){html+=`<div class="section-title" style="color:var(--danger)">밀린 복습 ${overdueCnt}개</div>`;items.filter(i=>i.overdue).forEach(item=>{html+=todayItemHTML(item,`${daysDiff(item.due,td)}일 밀림`,'badge-red')})}
+    if(todayCnt>0){html+=`<div class="section-title" style="margin-top:${overdueCnt>0?'16px':'0'}">오늘 복습 ${todayCnt}개</div>`;items.filter(i=>!i.overdue).forEach(item=>{html+=todayItemHTML(item,INTERVAL_LABELS[item.idx]+' 복습','badge-blue')})}
   }
   document.getElementById('panel-today').innerHTML=html;
 }
 function todayItemHTML(item,badgeText,badgeClass){
   return`<div class="today-item" id="ti-${item.unit.id}-${item.idx}">
-    <button class="check-btn" onclick="checkItem(${item.unit.id},${item.idx})">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-    </button>
+    <button class="check-btn" onclick="checkItem(${item.unit.id},${item.idx})"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></button>
     <div class="item-info"><div class="item-name">${item.unit.name}</div><div class="item-sub">${subjectName(item.unit.sid)}</div></div>
     <span class="badge ${badgeClass}">${badgeText}</span>
   </div>`;
@@ -494,29 +741,24 @@ async function checkItem(uid,idx){
   if(el){el.classList.add('done-anim');el.querySelector('.check-btn').classList.add('checked')}
   u.reviews[idx]=true;renderHeader();
   setSyncStatus('syncing','저장 중...');
-  try{await apiPost({action:'saveUnit',unit:u});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','저장 실패')}
+  try{await apiPost({action:'saveUnit',unit:u});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','저장 실패')}
   setTimeout(()=>renderToday(),400);
 }
 
 // ── 과목 ──
 function renderSubjects(){
   let html=`<div class="add-card"><h3>단원 추가</h3>
-    <div class="form-group"><label class="form-label">과목</label>
-      <select class="form-select" id="sel-subj">${SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>
-    </div>
+    <div class="form-group"><label class="form-label">과목</label><select class="form-select" id="sel-subj">${SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
     <div class="form-group"><label class="form-label">단원명</label><input type="text" class="form-input" id="inp-unit" placeholder="예: 1장 실수의 완비성"></div>
     <div class="form-group"><label class="form-label">학습일</label><input type="date" class="form-input" id="inp-date" value="${today()}"></div>
     <button class="btn-primary" id="add-unit-btn" onclick="addUnit()">추가하기</button>
   </div>`;
-  const grouped={};
-  state.units.forEach(u=>{if(!grouped[u.sid])grouped[u.sid]=[];grouped[u.sid].push(u)});
+  const grouped={};state.units.forEach(u=>{if(!grouped[u.sid])grouped[u.sid]=[];grouped[u.sid].push(u)});
   SUBJECTS.forEach(s=>{
     const units=grouped[s.id]||[];if(!units.length)return;
     html+=`<div class="subject-section"><div class="subject-header"><span class="subject-name-label">${s.name}</span><span class="subject-count">${units.length}단원</span></div>`;
     units.forEach(u=>{
-      const done=u.reviews.filter(Boolean).length;
-      const pct=Math.round(done/REVIEW_INTERVALS.length*100);
+      const done=u.reviews.filter(Boolean).length;const pct=Math.round(done/REVIEW_INTERVALS.length*100);
       html+=`<div class="unit-item"><div class="unit-item-info"><div class="unit-item-name">${u.name}</div><div class="unit-item-date">${u.date} 학습</div></div>
         <div class="progress-mini"><div class="progress-mini-bar"><div class="progress-mini-fill" style="width:${pct}%"></div></div><div class="progress-mini-text">${done}/${REVIEW_INTERVALS.length}</div></div>
         <button class="btn-del" onclick="deleteUnit(${u.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
@@ -528,25 +770,18 @@ function renderSubjects(){
   document.getElementById('panel-subjects').innerHTML=html;
 }
 async function addUnit(){
-  const sid=document.getElementById('sel-subj').value;
-  const name=document.getElementById('inp-unit').value.trim();
-  const date=document.getElementById('inp-date').value||today();
+  const sid=document.getElementById('sel-subj').value;const name=document.getElementById('inp-unit').value.trim();const date=document.getElementById('inp-date').value||today();
   if(!name){alert('단원명을 입력해주세요');return}
-  const btn=document.getElementById('add-unit-btn');
-  btn.disabled=true;btn.textContent='저장 중...';
+  const btn=document.getElementById('add-unit-btn');btn.disabled=true;btn.textContent='저장 중...';
   const unit={id:Date.now(),sid,name,date,reviews:Array(REVIEW_INTERVALS.length).fill(false)};
-  state.units.push(unit);
-  setSyncStatus('syncing','저장 중...');
-  try{await apiPost({action:'saveUnit',unit});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','저장 실패')}
+  state.units.push(unit);setSyncStatus('syncing','저장 중...');
+  try{await apiPost({action:'saveUnit',unit});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','저장 실패')}
   renderSubjects();renderToday();renderHeader();
 }
 async function deleteUnit(id){
   if(!confirm('이 단원을 삭제할까요?'))return;
-  state.units=state.units.filter(u=>u.id!==id);
-  setSyncStatus('syncing','삭제 중...');
-  try{await apiPost({action:'deleteUnit',id});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','삭제 실패')}
+  state.units=state.units.filter(u=>u.id!==id);setSyncStatus('syncing','삭제 중...');
+  try{await apiPost({action:'deleteUnit',id});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','삭제 실패')}
   renderSubjects();renderToday();renderHeader();
 }
 
@@ -566,8 +801,7 @@ function getStatus(unit,idx){
 }
 function filterReview(filter,btn){
   document.querySelectorAll('#review-filter .filter-chip').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const td=today();let units=[...state.units];
+  btn.classList.add('active');const td=today();let units=[...state.units];
   if(filter==='due')units=units.filter(u=>REVIEW_INTERVALS.some((_,i)=>!u.reviews[i]&&addDays(u.date,REVIEW_INTERVALS[i])<=td));
   else if(filter!=='all')units=units.filter(u=>u.sid===filter);
   if(!units.length){document.getElementById('review-body').innerHTML=`<div class="empty-state">해당하는 단원이 없어요</div>`;return}
@@ -581,8 +815,7 @@ function filterReview(filter,btn){
       <div class="review-dots">${REVIEW_INTERVALS.map((interval,idx)=>{
         const st=getStatus(u,idx);const due=addDays(u.date,interval);
         return`<div class="review-dot ${st}" onclick="toggleReview(${u.id},${idx})">
-          <div class="dot-label">${INTERVAL_LABELS[idx]}</div>
-          <div class="dot-date">${due.slice(5)}</div>
+          <div class="dot-label">${INTERVAL_LABELS[idx]}</div><div class="dot-date">${due.slice(5)}</div>
           ${st==='done'?'<div class="dot-check">✓</div>':''}
         </div>`;
       }).join('')}</div>
@@ -591,10 +824,8 @@ function filterReview(filter,btn){
 }
 async function toggleReview(uid,idx){
   const u=state.units.find(u=>u.id===uid);if(!u)return;
-  u.reviews[idx]=!u.reviews[idx];
-  setSyncStatus('syncing','저장 중...');
-  try{await apiPost({action:'saveUnit',unit:u});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','저장 실패')}
+  u.reviews[idx]=!u.reviews[idx];setSyncStatus('syncing','저장 중...');
+  try{await apiPost({action:'saveUnit',unit:u});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','저장 실패')}
   renderReview();renderToday();renderHeader();
 }
 
@@ -615,29 +846,25 @@ function renderAnalysis(){
   <div id="analysis-trend" class="analysis-panel ${currentAnalysisTab==='trend'?'active':''}"></div>`;
   renderCurrentAnalysisTab();
 }
-
 function switchAnalysisTab(name,btn){
   currentAnalysisTab=name;
-  document.querySelectorAll('.analysis-tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.analysis-tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
   document.querySelectorAll('.analysis-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('analysis-'+name).classList.add('active');
   renderCurrentAnalysisTab();
 }
-
 function renderCurrentAnalysisTab(){
-  if(currentAnalysisTab==='heatmap') renderHeatmap();
-  else if(currentAnalysisTab==='chart') renderChart();
-  else if(currentAnalysisTab==='weak') renderWeak();
-  else if(currentAnalysisTab==='plan') renderPlan();
-  else if(currentAnalysisTab==='trend') renderTrend();
+  if(currentAnalysisTab==='heatmap')renderHeatmap();
+  else if(currentAnalysisTab==='chart')renderChart();
+  else if(currentAnalysisTab==='weak')renderWeak();
+  else if(currentAnalysisTab==='plan')renderPlan();
+  else if(currentAnalysisTab==='trend')renderTrend();
 }
 
 // ① 히트맵
 function renderHeatmap(){
-  const subjectNames = Object.keys(HEATMAP_DATA);
-  const shortNames = {'해석학':'해석학','위상수학':'위상수학','현대대수학':'현대대수','미적분학':'미적분','미분기하학':'미분기하','정수론':'정수론','복소해석학':'복소해석','선형대수':'선형대수','이산수학':'이산수학','확률과통계':'확률통계'};
-
+  const subjectNames=Object.keys(HEATMAP_DATA);
+  const shortNames={'해석학':'해석학','위상수학':'위상수학','현대대수학':'현대대수','미적분학':'미적분','미분기하학':'미분기하','정수론':'정수론','복소해석학':'복소해석','선형대수':'선형대수','이산수학':'이산수학','확률과통계':'확률통계'};
   let html=`
   <div class="filter-row">
     <button class="filter-chip ${hmFilter==='all'?'active':''}" onclick="setHmFilter('all',this)">전체</button>
@@ -650,105 +877,111 @@ function renderHeatmap(){
     <div class="hm-legend-item"><div class="hm-legend-dot" style="background:#9FE1CB"></div>전공A+B</div>
     <div class="hm-legend-item"><div class="hm-legend-dot" style="background:var(--surface2)"></div>미출제</div>
   </div>
+  <p style="font-size:11px;color:var(--text3);margin-bottom:8px">💡 셀을 탭하면 해당 연도·과목의 기출 문제, 단원별 빈도, 출제 패턴을 볼 수 있어요</p>
   <div class="heatmap-wrap">
   <table class="heatmap"><tr><th>연도</th>${subjectNames.map(s=>`<th>${shortNames[s]||s}</th>`).join('')}</tr>`;
-
   YEARS.forEach(year=>{
     html+=`<tr><th style="color:var(--text3);font-size:10px;font-weight:500">${year}</th>`;
     subjectNames.forEach(subj=>{
       const val=HEATMAP_DATA[subj][year];
       let cls='cell-none',label='-';
-      if(val==='A'){cls='cell-a';label='A'}
-      else if(val==='B'){cls='cell-b';label='B'}
-      else if(val==='AB'){cls='cell-ab';label='A+B'}
-
-      // 필터 적용
+      if(val==='A'){cls='cell-a';label='A'}else if(val==='B'){cls='cell-b';label='B'}else if(val==='AB'){cls='cell-ab';label='A+B'}
       if(hmFilter==='A'&&val==='B'){cls='cell-hidden';label='-'}
       if(hmFilter==='B'&&val==='A'){cls='cell-hidden';label='-'}
-
       if(val&&!(hmFilter==='A'&&val==='B')&&!(hmFilter==='B'&&val==='A')){
-        html+=`<td class="${cls}" onclick="showHmPopup('${subj}','${year}')">${label}</td>`;
-      }else{
-        html+=`<td class="${cls}">${label}</td>`;
-      }
+        html+=`<td class="${cls}" onclick="openCellPopup('${subj}','${year}')">${label}</td>`;
+      }else{html+=`<td class="${cls}">${label}</td>`}
     });
     html+=`</tr>`;
   });
-  html+=`</table></div><div class="hm-popup" id="hm-popup"><div class="hm-popup-title" id="hm-popup-title"></div><div id="hm-popup-body"></div></div>`;
+  html+=`</table></div>`;
   document.getElementById('analysis-heatmap').innerHTML=html;
 }
-
 function setHmFilter(f,btn){
-  hmFilter=f;
-  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderHeatmap();
+  hmFilter=f;document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHeatmap();
 }
 
-function showHmPopup(subj,year){
-  const popup=document.getElementById('hm-popup');
-  const val=HEATMAP_DATA[subj][year];
-  if(!val){popup.classList.remove('show');return}
-  document.getElementById('hm-popup-title').textContent=`${year}년 ${subj}`;
-  // 구글 시트에서 해당 연도 데이터 표시
+// 팝업
+function openCellPopup(subj,year){
+  const val=HEATMAP_DATA[subj][year];if(!val)return;
+  const data=CELL_DATA[subj];if(!data)return;
+  document.getElementById('popup-year').textContent=`${year}년`;
+  document.getElementById('popup-title').textContent=subj;
   const typeLabel=val==='A'?'전공A':val==='B'?'전공B':'전공A + 전공B';
-  document.getElementById('hm-popup-body').innerHTML=`
-    <div class="hm-popup-item"><strong>출제 유형:</strong> ${typeLabel}</div>
-    <div class="hm-popup-item" style="color:var(--text3);font-size:11px">👆 기출분석 탭의 과목별 상세 내용에서 문제를 확인하세요</div>`;
-  popup.classList.toggle('show');
+  const typeCls=val==='A'?'type-a':val==='B'?'type-b':'type-ab';
+  document.getElementById('popup-type').innerHTML=`<span class="popup-type ${typeCls}">${typeLabel}</span>`;
+
+  const exams=(data.exams[year])||[];
+  let html='';
+
+  // 연도별 기출 문제
+  html+=`<div class="popup-section"><div class="popup-section-title">📋 ${year}년 기출 문제</div>`;
+  if(exams.length===0){
+    html+=`<div style="font-size:12px;color:var(--text3);padding:8px 0">해당 연도 데이터 없음</div>`;
+  }else{
+    exams.forEach(e=>{
+      const tc=e.type==='전공A'?'type-a':'type-b';
+      html+=`<div class="exam-item">
+        <span class="exam-item-type ${tc}">${e.type}</span>
+        <div class="exam-item-subject">${e.subject}</div>
+        <div class="exam-item-unit">📁 ${e.unit}</div>
+      </div>`;
+    });
+  }
+  html+=`</div>`;
+
+  // 단원별 출제 빈도
+  html+=`<div class="popup-section"><div class="popup-section-title">⭐ ${subj} 단원별 출제 빈도</div>`;
+  data.freq.forEach(f=>{
+    html+=`<div class="freq-item">
+      <div class="freq-item-name">${f.name}</div>
+      <div class="freq-item-stars">${f.stars}</div>
+      <div class="freq-item-count">${f.count}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // 핵심 출제 패턴
+  html+=`<div class="popup-section"><div class="popup-section-title">🎯 핵심 출제 패턴</div>`;
+  data.patterns.forEach(p=>{
+    html+=`<div class="pattern-item">
+      <div class="pattern-num">${p.num}</div>
+      <div class="pattern-title">${p.title}</div>
+      <div class="pattern-desc">${p.desc}</div>
+      <div class="pattern-year">${p.year}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  document.getElementById('popup-content').innerHTML=html;
+  document.getElementById('cell-popup').classList.add('open');
+}
+function closeCellPopup(e,force=false){
+  if(force||(e&&e.target===document.getElementById('cell-popup')))
+    document.getElementById('cell-popup').classList.remove('open');
 }
 
 // ② 과목 분석
 function renderChart(){
-  const subjects=Object.keys(SUBJECT_COUNTS);
-  const maxCount=Math.max(...Object.values(SUBJECT_COUNTS));
-
-  let html=`
-  <div class="bar-section">
-    <div class="bar-section-title">과목별 총 출제 문제 수 (2014~2026)</div>`;
-
+  const subjects=Object.keys(SUBJECT_COUNTS);const maxCount=Math.max(...Object.values(SUBJECT_COUNTS));
   const colors=['#378ADD','#7F77DD','#1D9E75','#D85A30','#1D9E75','#9a6b00','#6b48c8','#378ADD','#c0392b','#2d7a4f'];
+  let html=`<div class="bar-section"><div class="bar-section-title">과목별 총 출제 문제 수 (2014~2026)</div>`;
   subjects.forEach((s,i)=>{
-    const cnt=SUBJECT_COUNTS[s];
-    const pct=Math.round(cnt/maxCount*100);
-    html+=`<div class="bar-row">
-      <div class="bar-label">${s}</div>
-      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[i]};color:white">${cnt}문제</div></div>
-      <div class="bar-count">${cnt}</div>
-    </div>`;
+    const cnt=SUBJECT_COUNTS[s];const pct=Math.round(cnt/maxCount*100);
+    html+=`<div class="bar-row"><div class="bar-label">${s}</div><div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${colors[i]};color:white">${cnt}문제</div></div><div class="bar-count">${cnt}</div></div>`;
   });
-  html+=`</div>
-
-  <div class="bar-section">
-    <div class="bar-section-title">전공A / 전공B 출제 비율</div>`;
-
+  html+=`</div><div class="bar-section"><div class="bar-section-title">전공A / 전공B 출제 비율</div>`;
   subjects.forEach(s=>{
-    const total=SUBJECT_COUNTS[s];
-    const aCnt=SUBJECT_A_COUNTS[s];
-    const bCnt=total-aCnt;
-    const aPct=Math.round(aCnt/total*100);
-    const bPct=100-aPct;
-    html+=`<div class="ratio-row">
-      <div class="ratio-label">${s}</div>
-      <div class="ratio-bar">
-        <div class="ratio-a" style="width:${aPct}%">${aPct}%A</div>
-        <div class="ratio-b" style="width:${bPct}%">${bPct}%B</div>
-      </div>
-    </div>`;
+    const total=SUBJECT_COUNTS[s];const aCnt=SUBJECT_A_COUNTS[s];
+    const aPct=Math.round(aCnt/total*100);const bPct=100-aPct;
+    html+=`<div class="ratio-row"><div class="ratio-label">${s}</div><div class="ratio-bar"><div class="ratio-a" style="width:${aPct}%">${aPct}%A</div><div class="ratio-b" style="width:${bPct}%">${bPct}%B</div></div></div>`;
   });
-  html+=`</div>
-
-  <div class="bar-section">
-    <div class="bar-section-title">과목별 난이도 (상대적)</div>`;
-
+  html+=`</div><div class="bar-section"><div class="bar-section-title">과목별 난이도 (상대적)</div>`;
   subjects.forEach(s=>{
     const diff=SUBJECT_DIFFICULTY[s];
     const color=diff>=90?'#c0392b':diff>=80?'#e67e22':diff>=70?'#f39c12':'#2d7a4f';
     const label=diff>=90?'최상':diff>=80?'상':diff>=70?'중상':'중';
-    html+=`<div class="bar-row">
-      <div class="bar-label">${s}</div>
-      <div class="bar-bg"><div class="bar-fill" style="width:${diff}%;background:${color};color:white">${label}</div></div>
-    </div>`;
+    html+=`<div class="bar-row"><div class="bar-label">${s}</div><div class="bar-bg"><div class="bar-fill" style="width:${diff}%;background:${color};color:white">${label}</div></div></div>`;
   });
   html+=`</div>`;
   document.getElementById('analysis-chart').innerHTML=html;
@@ -756,77 +989,59 @@ function renderChart(){
 
 // ③ 취약단원
 function renderWeak(){
-  const registeredUnitNames = state.units.map(u=>u.name);
-  let html=`
-  <div style="background:var(--danger-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:12px;color:var(--danger)">
-    <strong>⚠️ 출제빈도 ★★★★★ 이상 단원 중 아직 학습 전인 단원이에요!</strong><br>
+  const registeredUnitNames=state.units.map(u=>u.name);
+  let html=`<div style="background:var(--danger-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:12px;color:var(--danger)">
+    <strong>⚠️ 출제빈도 ★★★★★ 이상 단원 중 핵심 단원이에요!</strong><br>
     <span style="font-size:11px;color:var(--text2)">플래너에 단원을 추가하면 자동으로 체크됩니다</span>
   </div>`;
-
   TOP_UNITS.forEach((item,i)=>{
     const stars='★'.repeat(item.stars);
     const isRegistered=registeredUnitNames.some(n=>n.includes(item.unit.slice(0,6)));
-    html+=`<div class="weak-card">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div class="weak-rank">${String(i+1).padStart(2,'0')}</div>
-        <div style="flex:1">
-          <div class="weak-subject">${item.subject}</div>
-          <div class="weak-unit">${item.unit}</div>
-          <div class="weak-stars">${stars} <span style="color:var(--text3);font-size:11px">${item.count}회 출제</span></div>
-          ${isRegistered
-            ?'<div class="weak-done">✅ 플래너에 등록됨</div>'
-            :'<div class="weak-msg">📚 아직 학습 전 — 지금 공부하세요!</div>'}
-        </div>
+    html+=`<div class="weak-card"><div style="display:flex;align-items:flex-start;gap:10px">
+      <div style="font-size:18px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;width:28px;flex-shrink:0">${String(i+1).padStart(2,'0')}</div>
+      <div style="flex:1">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:2px">${item.subject}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">${item.unit}</div>
+        <div style="color:#f59e0b;font-size:12px">${stars} <span style="color:var(--text3);font-size:11px">${item.count}회 출제</span></div>
+        ${isRegistered?'<div style="font-size:11px;color:var(--success);margin-top:4px">✅ 플래너에 등록됨</div>':'<div style="font-size:11px;color:var(--danger);margin-top:4px">📚 아직 학습 전 — 지금 공부하세요!</div>'}
       </div>
-    </div>`;
+    </div></div>`;
   });
   document.getElementById('analysis-weak').innerHTML=html;
 }
 
 // ④ 학습플랜
 function renderPlan(){
-  const now=new Date();
-  const daysLeft=Math.ceil((EXAM_DATE-now)/86400000);
-  const monthsLeft=Math.round(daysLeft/30);
-
-  // 단원별 학습 추천 시기
+  const now=new Date();const daysLeft=Math.ceil((EXAM_DATE-now)/86400000);
   const planItems=[
-    {unit:'체론 – 갈루아 이론',subject:'현대대수학',stars:6,targetMonth:3,priority:'urgent'},
-    {unit:'함수열·함수항급수 / 평등수렴',subject:'해석학',stars:5,targetMonth:3,priority:'urgent'},
-    {unit:'공간곡선론 (곡률·비틀림·Frenet)',subject:'미분기하학',stars:6,targetMonth:3,priority:'urgent'},
-    {unit:'결합분포 / 조건부분포',subject:'확률과통계',stars:5,targetMonth:4,priority:'soon'},
-    {unit:'확률변수 함수의 분포',subject:'확률과통계',stars:5,targetMonth:4,priority:'soon'},
-    {unit:'코시-리만 방정식 / 해석함수',subject:'복소해석학',stars:5,targetMonth:4,priority:'soon'},
-    {unit:'군론 (순환군·잉여군·준동형)',subject:'현대대수학',stars:5,targetMonth:5,priority:'soon'},
-    {unit:'고유값·고유벡터',subject:'선형대수',stars:5,targetMonth:5,priority:'ok'},
-    {unit:'내부·폐포·경계',subject:'위상수학',stars:5,targetMonth:5,priority:'ok'},
-    {unit:'다항 합동방정식',subject:'정수론',stars:5,targetMonth:6,priority:'ok'},
+    {unit:'체론 – 갈루아 이론',subject:'현대대수학',stars:6,priority:'urgent'},
+    {unit:'함수열·함수항급수 / 평등수렴',subject:'해석학',stars:5,priority:'urgent'},
+    {unit:'공간곡선론 (곡률·비틀림·Frenet)',subject:'미분기하학',stars:6,priority:'urgent'},
+    {unit:'결합분포 / 조건부분포',subject:'확률과통계',stars:5,priority:'soon'},
+    {unit:'확률변수 함수의 분포',subject:'확률과통계',stars:5,priority:'soon'},
+    {unit:'코시-리만 방정식 / 해석함수',subject:'복소해석학',stars:5,priority:'soon'},
+    {unit:'군론 (순환군·잉여군·준동형)',subject:'현대대수학',stars:5,priority:'soon'},
+    {unit:'고유값·고유벡터',subject:'선형대수',stars:5,priority:'ok'},
+    {unit:'내부·폐포·경계',subject:'위상수학',stars:5,priority:'ok'},
+    {unit:'다항 합동방정식',subject:'정수론',stars:5,priority:'ok'},
   ];
-
-  let html=`
-  <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
+  let html=`<div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
     <div style="font-size:13px;font-weight:700;color:var(--accent)">시험까지 D-${daysLeft}일 남았어요</div>
     <div style="font-size:11px;color:var(--text2);margin-top:4px">빈도 높은 단원부터 우선 학습 순서를 잡아드릴게요</div>
   </div>
-  <div class="filter-row">
-    <div style="font-size:11px;color:var(--text3);display:flex;gap:10px;align-items:center">
-      <span style="background:var(--danger-light);color:var(--danger);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🔴 지금 당장</span>
-      <span style="background:var(--warning-light);color:var(--warning);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🟡 곧 해야함</span>
-      <span style="background:var(--success-light);color:var(--success);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🟢 여유있음</span>
-    </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <span style="background:var(--danger-light);color:var(--danger);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🔴 지금 당장</span>
+    <span style="background:var(--warning-light);color:var(--warning);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🟡 곧 해야함</span>
+    <span style="background:var(--success-light);color:var(--success);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">🟢 여유있음</span>
   </div>`;
-
   planItems.forEach((item,i)=>{
-    const urgencyClass=item.priority==='urgent'?'plan-urgent':item.priority==='soon'?'plan-soon':'plan-ok';
-    const urgencyText=item.priority==='urgent'?'🔴 지금 당장':item.priority==='soon'?'🟡 곧 해야함':'🟢 여유있음';
+    const uc=item.priority==='urgent'?'plan-urgent':item.priority==='soon'?'plan-soon':'plan-ok';
+    const ut=item.priority==='urgent'?'🔴 지금 당장':item.priority==='soon'?'🟡 곧 해야함':'🟢 여유있음';
     const stars='★'.repeat(Math.min(item.stars,6));
     html+=`<div class="plan-card">
       <div style="font-size:18px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;width:28px;flex-shrink:0">${i+1}</div>
-      <div style="flex:1">
-        <div class="plan-subject">${item.subject} ${stars}</div>
-        <div class="plan-unit">${item.unit}</div>
-      </div>
-      <div class="plan-urgency ${urgencyClass}">${urgencyText}</div>
+      <div style="flex:1"><div style="font-size:11px;color:var(--text2)">${item.subject} ${stars}</div><div style="font-size:13px;font-weight:600">${item.unit}</div></div>
+      <div class="plan-urgency ${uc}">${ut}</div>
     </div>`;
   });
   document.getElementById('analysis-plan').innerHTML=html;
@@ -834,80 +1049,38 @@ function renderPlan(){
 
 // ⑤ 최신 트렌드
 function renderTrend(){
-  let html=`
-  <div style="background:var(--warning-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:12px;color:var(--warning)">
-    <strong>🔥 최근 3년(2024~2026) 새로 등장하거나 강화된 출제 유형이에요!</strong>
-  </div>`;
+  const subjects=['해석학','위상수학','현대대수학','미적분학','미분기하학','정수론','복소해석학','선형대수','이산수학','확률과통계'];
+  const values=subjects.map(s=>SUBJECT_DIFFICULTY[s]/100);
+  const n=subjects.length;const cx=150,cy=150,r=110;const angleStep=(2*Math.PI)/n;
+  function getPoint(i,val){const angle=i*angleStep-Math.PI/2;return{x:cx+r*val*Math.cos(angle),y:cy+r*val*Math.sin(angle)}}
+  let gridLines='';[0.25,0.5,0.75,1.0].forEach(level=>{const pts=subjects.map((_,i)=>getPoint(i,level));gridLines+=`<polygon points="${pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>`;});
+  let axisLines='';subjects.forEach((_,i)=>{const p=getPoint(i,1);axisLines+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#e0e0e0" stroke-width="0.5"/>`;});
+  const dataPoints=values.map((_,i)=>getPoint(i,values[i]));
+  const polyPoints=dataPoints.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  let labels='';subjects.forEach((s,i)=>{const p=getPoint(i,1.22);const sn=s.length>4?s.slice(0,4):s;labels+=`<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b6860">${sn}</text>`;});
 
-  // 레이더 차트 (SVG로)
-  html+=`<div style="background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:14px;border:1px solid var(--border)">
+  let html=`<div style="background:var(--warning-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:12px;color:var(--warning)">
+    <strong>🔥 최근 3년(2024~2026) 새로 등장하거나 강화된 출제 유형이에요!</strong>
+  </div>
+  <div style="background:var(--surface);border-radius:var(--radius);padding:14px;margin-bottom:14px;border:1px solid var(--border)">
     <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em">과목별 난이도 레이더</div>
-    ${renderRadarChart()}
+    <div style="display:flex;justify-content:center">
+      <svg width="300" height="300" viewBox="0 0 300 300">
+        ${gridLines}${axisLines}
+        <polygon points="${polyPoints}" fill="rgba(61,90,153,0.2)" stroke="#3d5a99" stroke-width="1.5"/>
+        ${dataPoints.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="#3d5a99"/>`).join('')}
+        ${labels}
+      </svg>
+    </div>
   </div>`;
 
   [2026,2025,2024].forEach(year=>{
     const items=RECENT_TRENDS[year];
-    html+=`<div class="trend-card">
-      <div class="trend-year-badge">${year}년 출제</div>`;
-    items.forEach(item=>{
-      html+=`<div class="trend-item">
-        <span style="color:var(--text3);margin-right:6px">${item.subject}</span>
-        ${item.text}
-        ${item.isNew?'<span class="trend-new-badge">NEW</span>':''}
-      </div>`;
-    });
+    html+=`<div class="trend-card"><div class="trend-year-badge">${year}년 출제</div>`;
+    items.forEach(item=>{html+=`<div class="trend-item"><span style="color:var(--text3);margin-right:6px">${item.subject}</span>${item.text}${item.isNew?'<span class="trend-new-badge">NEW</span>':''}</div>`});
     html+=`</div>`;
   });
   document.getElementById('analysis-trend').innerHTML=html;
-}
-
-function renderRadarChart(){
-  const subjects=['해석학','위상수학','현대대수학','미적분학','미분기하학','정수론','복소해석학','선형대수','이산수학','확률과통계'];
-  const values=subjects.map(s=>SUBJECT_DIFFICULTY[s]/100);
-  const n=subjects.length;
-  const cx=150,cy=150,r=110;
-  const angleStep=(2*Math.PI)/n;
-
-  // 폴리곤 포인트 계산
-  function getPoint(i,val){
-    const angle=i*angleStep-Math.PI/2;
-    return{x:cx+r*val*Math.cos(angle),y:cy+r*val*Math.sin(angle)};
-  }
-
-  // 그리드
-  let gridLines='';
-  [0.25,0.5,0.75,1.0].forEach(level=>{
-    const pts=subjects.map((_,i)=>getPoint(i,level));
-    gridLines+=`<polygon points="${pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>`;
-  });
-
-  // 축선
-  let axisLines='';
-  subjects.forEach((_,i)=>{
-    const p=getPoint(i,1);
-    axisLines+=`<line x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="#e0e0e0" stroke-width="0.5"/>`;
-  });
-
-  // 데이터 폴리곤
-  const dataPoints=values.map((_,i)=>getPoint(i,values[i]));
-  const polyPoints=dataPoints.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-
-  // 레이블
-  let labels='';
-  subjects.forEach((s,i)=>{
-    const p=getPoint(i,1.22);
-    const shortName=s.length>4?s.slice(0,4):s;
-    labels+=`<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="9" fill="#6b6860">${shortName}</text>`;
-  });
-
-  return`<div style="display:flex;justify-content:center">
-    <svg width="300" height="300" viewBox="0 0 300 300">
-      ${gridLines}${axisLines}
-      <polygon points="${polyPoints}" fill="rgba(61,90,153,0.2)" stroke="#3d5a99" stroke-width="1.5"/>
-      ${dataPoints.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="#3d5a99"/>`).join('')}
-      ${labels}
-    </svg>
-  </div>`;
 }
 
 // ── 기록 ──
@@ -919,15 +1092,9 @@ function renderRecord(){
   </div>
   <button class="btn-primary" style="margin-bottom:14px" onclick="openRecordModal()">+ 풀이 기록 추가</button>
   <div id="rec-body"></div>`;
-  document.getElementById('panel-record').innerHTML=html;
-  renderRecordBody();
+  document.getElementById('panel-record').innerHTML=html;renderRecordBody();
 }
-function setRecFilter(f,btn){
-  recordFilter=f;
-  document.querySelectorAll('#rec-filter .filter-chip').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderRecordBody();
-}
+function setRecFilter(f,btn){recordFilter=f;document.querySelectorAll('#rec-filter .filter-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRecordBody()}
 function renderRecordBody(){
   let records=[...state.records].reverse();
   if(recordFilter!=='all')records=records.filter(r=>r.sid===recordFilter);
@@ -935,18 +1102,14 @@ function renderRecordBody(){
   document.getElementById('rec-body').innerHTML=records.map(r=>{
     const pct=r.total>0?Math.round(r.correct/r.total*100):null;
     return`<div class="record-card">
-      <div class="record-meta">
-        <span class="badge badge-gray">${subjectName(r.sid)}</span>
+      <div class="record-meta"><span class="badge badge-gray">${subjectName(r.sid)}</span>
         ${r.unitName?`<span class="badge badge-purple" style="font-size:10px">${r.unitName}</span>`:''}
         <span class="record-date">${r.date}</span>
         <button onclick="deleteRecord(${r.id})" style="margin-left:auto;border:none;background:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1">×</button>
       </div>
       ${r.source?`<div style="font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text2)">${r.source}</div>`:''}
       ${r.memo?`<div class="record-body">${r.memo}</div>`:''}
-      ${r.total>0?`<div class="score-display">
-        <div class="score-item">정답 <span>${r.correct}/${r.total}</span></div>
-        ${pct!==null?`<div class="score-item">정답률 <span>${pct}%</span></div>`:''}
-      </div>`:''}
+      ${r.total>0?`<div class="score-display"><div class="score-item">정답 <span>${r.correct}/${r.total}</span></div>${pct!==null?`<div class="score-item">정답률 <span>${pct}%</span></div>`:''}</div>`:''}
     </div>`;
   }).join('');
 }
@@ -954,52 +1117,38 @@ function openRecordModal(){
   document.getElementById('rec-subject').innerHTML=SUBJECTS.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
   document.getElementById('rec-date').value=today();
   ['rec-source','rec-correct','rec-total','rec-memo'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('rec-save-btn').disabled=false;
-  document.getElementById('rec-save-btn').textContent='저장';
-  updateRecUnitSelect();
-  document.getElementById('record-modal').classList.add('open');
+  document.getElementById('rec-save-btn').disabled=false;document.getElementById('rec-save-btn').textContent='저장';
+  updateRecUnitSelect();document.getElementById('record-modal').classList.add('open');
 }
 function updateRecUnitSelect(){
-  const sid=document.getElementById('rec-subject').value;
-  const units=state.units.filter(u=>u.sid===sid);
+  const sid=document.getElementById('rec-subject').value;const units=state.units.filter(u=>u.sid===sid);
   document.getElementById('rec-unit').innerHTML=`<option value="">-- 단원 선택 (선택사항) --</option>`+units.map(u=>`<option value="${u.id}">${u.name}</option>`).join('');
 }
 function closeRecordModal(e,force=false){
-  if(force||(e&&e.target===document.getElementById('record-modal')))
-    document.getElementById('record-modal').classList.remove('open');
+  if(force||(e&&e.target===document.getElementById('record-modal')))document.getElementById('record-modal').classList.remove('open');
 }
 async function saveRecord(){
-  const sid=document.getElementById('rec-subject').value;
-  const uid=document.getElementById('rec-unit').value;
+  const sid=document.getElementById('rec-subject').value;const uid=document.getElementById('rec-unit').value;
   const unitName=uid?(state.units.find(u=>u.id==uid)||{}).name||'':'';
-  const date=document.getElementById('rec-date').value||today();
-  const source=document.getElementById('rec-source').value.trim();
-  const correct=parseInt(document.getElementById('rec-correct').value)||0;
-  const total=parseInt(document.getElementById('rec-total').value)||0;
+  const date=document.getElementById('rec-date').value||today();const source=document.getElementById('rec-source').value.trim();
+  const correct=parseInt(document.getElementById('rec-correct').value)||0;const total=parseInt(document.getElementById('rec-total').value)||0;
   const memo=document.getElementById('rec-memo').value.trim();
-  const btn=document.getElementById('rec-save-btn');
-  btn.disabled=true;btn.textContent='저장 중...';
+  const btn=document.getElementById('rec-save-btn');btn.disabled=true;btn.textContent='저장 중...';
   const record={id:Date.now(),sid,unitName,date,source,correct,total,memo};
-  state.records.push(record);
-  setSyncStatus('syncing','저장 중...');
-  try{await apiPost({action:'saveRecord',record});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','저장 실패')}
-  closeRecordModal(null,true);
-  renderRecord();
+  state.records.push(record);setSyncStatus('syncing','저장 중...');
+  try{await apiPost({action:'saveRecord',record});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','저장 실패')}
+  closeRecordModal(null,true);renderRecord();
 }
 async function deleteRecord(id){
   if(!confirm('이 기록을 삭제할까요?'))return;
-  state.records=state.records.filter(r=>r.id!==id);
-  setSyncStatus('syncing','삭제 중...');
-  try{await apiPost({action:'deleteRecord',id});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}
-  catch(e){setSyncStatus('error','삭제 실패')}
+  state.records=state.records.filter(r=>r.id!==id);setSyncStatus('syncing','삭제 중...');
+  try{await apiPost({action:'deleteRecord',id});setSyncStatus('ok',`마지막 동기화: ${new Date().toLocaleTimeString('ko-KR')}`)}catch(e){setSyncStatus('error','삭제 실패')}
   renderRecordBody();
 }
 
 function renderAll(){renderHeader();renders[currentTab]()}
 const renders={today:renderToday,subjects:renderSubjects,review:renderReview,analysis:renderAnalysis,record:renderRecord};
-renderHeader();
-loadData();
+renderHeader();loadData();
 </script>
 </body>
 </html>
