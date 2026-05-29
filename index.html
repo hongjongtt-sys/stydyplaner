@@ -142,6 +142,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .cell-a{background:#B5D4F4;color:#0C447C}
 .cell-b{background:#CECBF6;color:#3C3489}
 .cell-ab{background:#9FE1CB;color:#085041}
+.cell-edu{background:#FAEEDA;color:#633806}
 .cell-none{background:var(--surface2);color:var(--text3);cursor:default}
 .cell-hidden{background:var(--surface2);color:transparent;cursor:default}
 .hm-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
@@ -321,6 +322,11 @@ const SUBJECTS=[
 const YEARS=[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026];
 
 const HEATMAP_DATA={
+  '교육학':{
+    type:'single',
+    years:[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026],
+    data:  [1,1,1,1,1,1,1,1,1,1,1,1,1]
+  },
   '수학교육론':{2014:null,2015:null,2016:null,2017:null,2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
   '해석학':    {2014:'AB',2015:'A',2016:'AB',2017:'B',2018:'AB',2019:'AB',2020:'AB',2021:'AB',2022:'AB',2023:'AB',2024:'AB',2025:'AB',2026:'AB'},
   '위상수학':  {2014:'AB',2015:'A',2016:'A',2017:'A',2018:'A',2019:'A',2020:'AB',2021:'AB',2022:'B',2023:'AB',2024:'A',2025:'B',2026:'AB'},
@@ -993,13 +999,20 @@ function renderCurrentAnalysisTab(){
 }
 function renderHeatmap(){
   const subjectNames=Object.keys(HEATMAP_DATA);
-  const shortNames={'수학교육론':'수학교육론','해석학':'해석학','위상수학':'위상수학','현대대수학':'현대대수','미적분학':'미적분','미분기하학':'미분기하','정수론':'정수론','복소해석학':'복소해석','선형대수':'선형대수','이산수학':'이산수학','확률과통계':'확률통계'};
+  const shortNames={
+    '교육학':'교육학',
+    '수학교육론':'수학교육론','해석학':'해석학','위상수학':'위상수학',
+    '현대대수학':'현대대수','미적분학':'미적분','미분기하학':'미분기하',
+    '정수론':'정수론','복소해석학':'복소해석','선형대수':'선형대수',
+    '이산수학':'이산수학','확률과통계':'확률통계'
+  };
   let html=`<div class="filter-row">
     <button class="filter-chip ${hmFilter==='all'?'active':''}" onclick="setHmFilter('all',this)">전체</button>
     <button class="filter-chip ${hmFilter==='A'?'active':''}" onclick="setHmFilter('A',this)">전공A만</button>
     <button class="filter-chip ${hmFilter==='B'?'active':''}" onclick="setHmFilter('B',this)">전공B만</button>
   </div>
   <div class="hm-legend">
+    <div class="hm-legend-item"><div class="hm-legend-dot" style="background:#FAEEDA;border:1px solid #BA7517"></div>교육학(논술)</div>
     <div class="hm-legend-item"><div class="hm-legend-dot" style="background:#B5D4F4"></div>전공A</div>
     <div class="hm-legend-item"><div class="hm-legend-dot" style="background:#CECBF6"></div>전공B</div>
     <div class="hm-legend-item"><div class="hm-legend-dot" style="background:#9FE1CB"></div>전공A+B</div>
@@ -1010,7 +1023,15 @@ function renderHeatmap(){
   YEARS.forEach(year=>{
     html+=`<tr><th style="color:var(--text3);font-size:10px;font-weight:500">${year}</th>`;
     subjectNames.forEach(subj=>{
-      const val=HEATMAP_DATA[subj][year];
+      const hmEntry=HEATMAP_DATA[subj];
+      if(hmEntry&&hmEntry.type==='single'){
+        const idx=hmEntry.years?hmEntry.years.indexOf(year):-1;
+        const val=idx>=0?hmEntry.data[idx]:0;
+        if(val){html+=`<td class="cell-edu" onclick="openCellPopup('${subj}','${year}')">논술</td>`;}
+        else{html+=`<td class="cell-none">-</td>`;}
+        return;
+      }
+      const val=hmEntry?hmEntry[year]:null;
       let cls='cell-none',label='-';
       if(val==='A'){cls='cell-a';label='A'}else if(val==='B'){cls='cell-b';label='B'}else if(val==='AB'){cls='cell-ab';label='A+B'}
       if(hmFilter==='A'&&val==='B'){cls='cell-hidden';label='-'}
@@ -1028,17 +1049,25 @@ function setHmFilter(f,btn){
   hmFilter=f;document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHeatmap();
 }
 function openCellPopup(subj,year){
-  const val=HEATMAP_DATA[subj][year];if(!val)return;
-  const data=CELL_DATA[subj];if(!data)return;
+  const hmEntry=HEATMAP_DATA[subj];
+  const data=CELL_DATA[subj];
+  if(!data)return;
+  const isSingle=hmEntry&&hmEntry.type==='single';
+  const val=isSingle?'논술':hmEntry[year];
+  if(!val)return;
   document.getElementById('popup-year').textContent=`${year}년`;
   document.getElementById('popup-title').textContent=subj;
-  const typeLabel=val==='A'?'전공A':val==='B'?'전공B':'전공A + 전공B';
-  const typeCls=val==='A'?'type-a':val==='B'?'type-b':'type-ab';
+  let typeLabel,typeCls;
+  if(isSingle){typeLabel='교육학 논술 (전공A/B 구분 없음)';typeCls='type-edu';}
+  else{typeLabel=val==='A'?'전공A':val==='B'?'전공B':'전공A + 전공B';typeCls=val==='A'?'type-a':val==='B'?'type-b':'type-ab';}
   document.getElementById('popup-type').innerHTML=`<span class="popup-type ${typeCls}">${typeLabel}</span>`;
-  const exams=(data.exams[year])||[];
+  const exams=(data.exams&&data.exams[year])||[];
   let html=`<div class="popup-section"><div class="popup-section-title">📋 ${year}년 기출 문제</div>`;
   if(!exams.length){html+=`<div style="font-size:12px;color:var(--text3);padding:8px 0">해당 연도 데이터 없음</div>`}
-  else{exams.forEach(e=>{const tc=e.type==='전공A'?'type-a':'type-b';html+=`<div class="exam-item"><span class="exam-item-type ${tc}">${e.type}</span><div class="exam-item-subject">${e.subject}</div><div class="exam-item-unit">📁 ${e.unit}</div></div>`})}
+  else{exams.forEach(e=>{
+    if(isSingle){html+=`<div class="exam-item"><span style="background:#FAEEDA;color:#633806;font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;display:inline-block;margin-bottom:4px">${e.type}</span><div class="exam-item-subject">${e.subject}</div><div class="exam-item-unit">📁 ${e.unit}</div></div>`;}
+    else{const tc=e.type==='전공A'?'type-a':'type-b';html+=`<div class="exam-item"><span class="exam-item-type ${tc}">${e.type}</span><div class="exam-item-subject">${e.subject}</div><div class="exam-item-unit">📁 ${e.unit}</div></div>`;}
+  });}
   html+=`</div><div class="popup-section"><div class="popup-section-title">⭐ ${subj} 단원별 출제 빈도</div>`;
   data.freq.forEach(f=>{html+=`<div class="freq-item"><div class="freq-item-name">${f.name}</div><div class="freq-item-stars">${f.stars}</div><div class="freq-item-count">${f.count}</div></div>`});
   html+=`</div><div class="popup-section"><div class="popup-section-title">🎯 핵심 출제 패턴</div>`;
