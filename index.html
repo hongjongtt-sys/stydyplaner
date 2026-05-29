@@ -1339,7 +1339,7 @@ function renderChecklist() {
   const type = clTab;
   const rows = clData[type];
   
-  // 탭 버튼 생성
+  // 1. 탭 버튼 생성
   let html = `<div class="cl-tab-row">
     <button class="cl-tab-btn ${type === 'math' ? 'active' : ''}" onclick="switchClTab('math')">📚 전공수학</button>
     <button class="cl-tab-btn ${type === 'edu_theory' ? 'active' : ''}" onclick="switchClTab('edu_theory')">📖 수교론</button>
@@ -1353,7 +1353,7 @@ function renderChecklist() {
     return;
   }
 
-  // 전체 진도 계산
+  // 2. 전체 진도 계산
   const allItems = rows.filter(r => {
     const c0 = String(r[0] || '');
     return r[1] && !c0.startsWith('━') && !c0.startsWith('►') && !c0.startsWith('▶')
@@ -1370,9 +1370,8 @@ function renderChecklist() {
     </div>
   </div>`;
 
-  // 2. 탭별 렌더링 분기
+  // 3. 탭별 렌더링 분기
   if (type === 'math') {
-    // [기존 전공수학 로직]
     const subjectStats = {}; let curSubj = '';
     rows.forEach((row, i) => {
       const c0 = String(row[0] || '');
@@ -1396,8 +1395,6 @@ function renderChecklist() {
       html += renderCheckItem(type, rowNum, row, checked);
     });
   } else {
-    // [수학교육론 및 교육학 공통 로직] 
-    // 수교론과 교육학 시트 구조가 같다면 동일하게 처리됩니다.
     const secStats = {}; let curSec = '';
     rows.forEach((row, i) => {
       const c0 = String(row[0] || '');
@@ -1413,7 +1410,7 @@ function renderChecklist() {
         const secName = c0.replace(/━━/g, '').trim();
         const st = secStats[secName] || { total: 0, done: 0 };
         const sp = st.total > 0 ? Math.round(st.done / st.total * 100) : 0;
-        const color = (type === 'edu') ? 'var(--accent)' : 'var(--purple)'; // 교육학은 엑센트색으로 구분
+        const color = (type === 'edu') ? 'var(--accent)' : 'var(--purple)';
         html += `<div class="cl-subject-header" style="background:${color}">${secName}<span class="cl-subject-prog">${st.done}/${st.total} · ${sp}%</span></div>`;
         return;
       }
@@ -1424,7 +1421,7 @@ function renderChecklist() {
   }
   document.getElementById('panel-checklist').innerHTML = html;
 }
-// 아이템 렌더링을 위한 보조 함수 (코드 중복 방지)
+
 function renderCheckItem(type, rowNum, row, checked) {
   return `<div class="cl-item ${checked ? 'checked' : ''}">
     <button class="cl-check ${checked ? 'on' : ''}" onclick="toggleCheck('${type}',${rowNum},${checked})">✓</button>
