@@ -901,9 +901,9 @@ let currentTab='today';
 
 // 체크리스트 상태
 let clTab='math';
-let clData={math:[],edu:[]};
-let clChecked={math:{},edu:{}};
-let clLoaded={math:false,edu:false};
+let clData={math:[],edu_theory:[],edu:[]};
+let clChecked={math:{},edu_theory:{},edu:{}};
+let clLoaded={math:false,edu_theory:false,edu:false};
 
 function today(){return new Date().toISOString().split('T')[0]}
 function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().split('T')[0]}
@@ -1315,7 +1315,7 @@ async function loadChecklist(type) {
 }
 
 async function toggleCheck(type,rowNum,currentVal){
-  const sheetName=type==='edu'?'수학교육론 체크리스트':'학습 체크리스트';
+  const sheetName=type==='edu'?'교육학 체크리스트':type==='edu_theory'?'수학교육론 체크리스트':'학습 체크리스트';
   clChecked[type][rowNum]=!currentVal;
   renderChecklist();
   setSyncStatus('syncing','저장 중...');
@@ -1430,8 +1430,6 @@ function renderCheckItem(type, rowNum, row, checked) {
       <div class="cl-meta"><span class="cl-stars">${String(row[2] || '')}</span>${row[3] ? `<span class="cl-count">${row[3]}회</span>` : ''}</div>
     </div>
   </div>`;
-}
-  document.getElementById('panel-checklist').innerHTML=html;
 }
 
 function renderAll(){renderHeader();renders[currentTab]()}
