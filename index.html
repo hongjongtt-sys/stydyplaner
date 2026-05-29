@@ -1170,10 +1170,10 @@ function setHmFilter(f,btn){
 function openCellPopup(subj,year){
   const hmEntry=HEATMAP_DATA[subj];
   const data=CELL_DATA[subj];
-  if(!data)return;
-  const isSingle=hmEntry&&hmEntry.type==='single';
-  const val=isSingle?'논술':hmEntry[year];
-  if(!val)return;
+  if (!data || !data.exams) return; 
+    const isSingle = (hmEntry && hmEntry.type === 'single');
+    const val = isSingle ? '논술' : hmEntry[year];
+    if (!val) return;
   document.getElementById('popup-year').textContent=`${year}년`;
   document.getElementById('popup-title').textContent=subj;
   let typeLabel,typeCls;
