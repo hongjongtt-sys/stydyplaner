@@ -1423,6 +1423,7 @@ function renderChecklist() {
 }
 
 function renderCheckItem(type, rowNum, row, checked) {
+  if(String(row[0])==='영역'||String(row[1])==='세부 단원') return '';
   return `<div class="cl-item ${checked ? 'checked' : ''}">
     <button class="cl-check ${checked ? 'on' : ''}" onclick="toggleCheck('${type}',${rowNum},${checked})">✓</button>
     <div class="cl-info">
