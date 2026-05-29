@@ -1299,19 +1299,28 @@ async function deleteRecord(id){
 }
 
 // ── 체크리스트 ──
-async function loadChecklist(type){
-  const sheetName=type==='edu'?'수학교육론 체크리스트':'학습 체크리스트';
-  try{
-    const rows=await apiGet('getChecklist&sheet='+encodeURIComponent(sheetName));
-    clData[type]=rows;
-    rows.forEach((row,i)=>{
-      const checked=row[4]===true||row[4]==='TRUE'||row[4]===1;
-      clChecked[type][i+1]=checked;
+async function loadChecklist(type) {
+  // type에 따라 시트 이름을 다르게 설정합니다.
+  let sheetName = '';
+  if (type === 'edu') {
+    sheetName = '교육학 체크리스트';
+  } else if (type === 'edu_theory') {
+    sheetName = '수학교육론 체크리스트';
+  } else {
+    sheetName = '학습 체크리스트';
+  }
+
+  try {
+    const rows = await apiGet('getChecklist&sheet=' + encodeURIComponent(sheetName));
+    clData[type] = rows;
+    rows.forEach((row, i) => {
+      const checked = row[4] === true || row[4] === 'TRUE' || row[4] === 1;
+      clChecked[type][i + 1] = checked;
     });
-    clLoaded[type]=true;
+    clLoaded[type] = true;
     renderChecklist();
-  }catch(e){
-    document.getElementById('panel-checklist').innerHTML='<div class="empty-state">데이터를 불러오지 못했어요<br><small>새로고침 해주세요</small></div>';
+  } catch (e) {
+    document.getElementById('panel-checklist').innerHTML = '<div class="empty-state">데이터를 불러오지 못했어요<br><small>새로고침 해주세요</small></div>';
   }
 }
 
@@ -1330,104 +1339,112 @@ async function toggleCheck(type,rowNum,currentVal){
   }
 }
 
-function switchClTab(type){
-  clTab=type;
+function switchClTab(type) {
+  clTab = type;
   renderChecklist();
-  if(!clLoaded[type])loadChecklist(type);
+  if (!clLoaded[type]) loadChecklist(type);
 }
 
-function renderChecklist(){
-  const type=clTab;
-  const rows=clData[type];
-  let html=`<div class="cl-tab-row">
-    <button class="cl-tab-btn ${type==='math'?'active':''}" onclick="switchClTab('math')">📚 전공수학</button>
-    <button class="cl-tab-btn ${type==='edu'?'active':''}" onclick="switchClTab('edu')">📖 수학교육론</button>
+function renderChecklist() {
+  const type = clTab;
+  const rows = clData[type];
+  
+  // 1. 탭 버튼 3개로 수정
+  let html = `<div class="cl-tab-row">
+    <button class="cl-tab-btn ${type === 'math' ? 'active' : ''}" onclick="switchClTab('math')">📚 전공수학</button>
+    <button class="cl-tab-btn ${type === 'edu_theory' ? 'active' : ''}" onclick="switchClTab('edu_theory')">📖 수교론</button>
+    <button class="cl-tab-btn ${type === 'edu' ? 'active' : ''}" onclick="switchClTab('edu')">📝 교육학</button>
   </div>`;
-  if(!rows||rows.length===0){
-    html+='<div class="empty-state">데이터 불러오는 중...<br><small>잠시만 기다려주세요</small></div>';
-    document.getElementById('panel-checklist').innerHTML=html;
-    if(!clLoaded[type])loadChecklist(type);
+
+  if (!rows || rows.length === 0) {
+    html += '<div class="empty-state">데이터 불러오는 중...<br><small>잠시만 기다려주세요</small></div>';
+    document.getElementById('panel-checklist').innerHTML = html;
+    if (!clLoaded[type]) loadChecklist(type);
     return;
   }
-  // 전체 진도
-  const allItems=rows.filter(r=>{
-    const c0=String(r[0]||'');
-    return r[1]&&!c0.startsWith('━')&&!c0.startsWith('►')&&!c0.startsWith('▶')
-      &&String(r[1])!=='단원명'&&String(r[1])!=='핵심 개념 (시험 용어)'&&String(r[0])!=='이론가 / 영역'&&String(r[0])!=='과목';
+
+  // 전체 진도 계산
+  const allItems = rows.filter(r => {
+    const c0 = String(r[0] || '');
+    return r[1] && !c0.startsWith('━') && !c0.startsWith('►') && !c0.startsWith('▶')
+      && String(r[1]) !== '단원명' && String(r[1]) !== '핵심 개념 (시험 용어)' && String(r[0]) !== '이론가 / 영역' && String(r[0]) !== '과목';
   });
-  const doneCnt=allItems.filter(r=>{const rowNum=rows.indexOf(r)+1;return clChecked[type][rowNum];}).length;
-  const totalCnt=allItems.length;
-  const pct=totalCnt>0?Math.round(doneCnt/totalCnt*100):0;
-  html+=`<div class="cl-progress-wrap">
+  const doneCnt = allItems.filter(r => { const rowNum = rows.indexOf(r) + 1; return clChecked[type][rowNum]; }).length;
+  const totalCnt = allItems.length;
+  const pct = totalCnt > 0 ? Math.round(doneCnt / totalCnt * 100) : 0;
+  
+  html += `<div class="cl-progress-wrap">
     <div class="cl-progress-title">전체 학습 진도 — ${doneCnt} / ${totalCnt} 완료 (${pct}%)</div>
     <div style="height:10px;background:var(--surface2);border-radius:5px;overflow:hidden">
       <div style="height:100%;width:${pct}%;background:var(--success);border-radius:5px;transition:width 0.5s"></div>
     </div>
   </div>`;
 
-  if(type==='math'){
-    // 학습 체크리스트: A=과목, B=단원명, C=출제빈도, D=출제횟수, E=학습완료
-    // 섹션헤더: A열 "► 과목명"
-    const subjectStats={};let curSubj='';
-    rows.forEach((row,i)=>{
-      const c0=String(row[0]||'');
-      if(c0.startsWith('►')||c0.startsWith('▶')){curSubj=c0.replace(/[►▶]\s*/,'').trim();subjectStats[curSubj]={total:0,done:0};return;}
-      if(!row[1]||String(row[1])==='단원명'||String(row[0])==='과목')return;
-      if(!curSubj)return;
+  // 2. 탭별 렌더링 분기
+  if (type === 'math') {
+    // [기존 전공수학 로직]
+    const subjectStats = {}; let curSubj = '';
+    rows.forEach((row, i) => {
+      const c0 = String(row[0] || '');
+      if (c0.startsWith('►') || c0.startsWith('▶')) { curSubj = c0.replace(/[►▶]\s*/, '').trim(); subjectStats[curSubj] = { total: 0, done: 0 }; return; }
+      if (!row[1] || String(row[1]) === '단원명' || String(row[0]) === '과목') return;
+      if (!curSubj) return;
       subjectStats[curSubj].total++;
-      if(clChecked[type][i+1])subjectStats[curSubj].done++;
+      if (clChecked[type][i + 1]) subjectStats[curSubj].done++;
     });
-    rows.forEach((row,i)=>{
-      const rowNum=i+1;const c0=String(row[0]||'');
-      if(c0.startsWith('►')||c0.startsWith('▶')){
-        const subj=c0.replace(/[►▶]\s*/,'').trim();
-        const st=subjectStats[subj]||{total:0,done:0};
-        const sp=st.total>0?Math.round(st.done/st.total*100):0;
-        html+=`<div class="cl-subject-header">${subj}<span class="cl-subject-prog">${st.done}/${st.total} · ${sp}%</span></div>`;
+    rows.forEach((row, i) => {
+      const rowNum = i + 1; const c0 = String(row[0] || '');
+      if (c0.startsWith('►') || c0.startsWith('▶')) {
+        const subj = c0.replace(/[►▶]\s*/, '').trim();
+        const st = subjectStats[subj] || { total: 0, done: 0 };
+        const sp = st.total > 0 ? Math.round(st.done / st.total * 100) : 0;
+        html += `<div class="cl-subject-header">${subj}<span class="cl-subject-prog">${st.done}/${st.total} · ${sp}%</span></div>`;
         return;
       }
-      if(!row[1]||String(row[1])==='단원명'||String(row[0])==='과목')return;
-      const checked=clChecked[type][rowNum]||false;
-      html+=`<div class="cl-item ${checked?'checked':''}">
-        <button class="cl-check ${checked?'on':''}" onclick="toggleCheck('${type}',${rowNum},${checked})">✓</button>
-        <div class="cl-info">
-          <div class="cl-name">${String(row[1])}</div>
-          <div class="cl-meta"><span class="cl-stars">${String(row[2]||'')}</span>${row[3]?`<span class="cl-count">${row[3]}회</span>`:''}</div>
-        </div>
-      </div>`;
+      if (!row[1] || String(row[1]) === '단원명' || String(row[0]) === '과목') return;
+      const checked = clChecked[type][rowNum] || false;
+      html += renderCheckItem(type, rowNum, row, checked);
     });
-  }else{
-    // 수학교육론 체크리스트: A=이론가, B=핵심개념, C=출제빈도, D=출제횟수, E=학습완료
-    // 섹션헤더: A열 "━━ 섹션명 ━━"
-    const secStats={};let curSec='';
-    rows.forEach((row,i)=>{
-      const c0=String(row[0]||'');
-      if(c0.startsWith('━━')){curSec=c0.replace(/━━/g,'').trim();secStats[curSec]={total:0,done:0};return;}
-      if(!row[1]||String(row[1])==='핵심 개념 (시험 용어)'||String(row[0])==='이론가 / 영역')return;
-      if(!curSec)return;
+  } else {
+    // [수학교육론 및 교육학 공통 로직] 
+    // 수교론과 교육학 시트 구조가 같다면 동일하게 처리됩니다.
+    const secStats = {}; let curSec = '';
+    rows.forEach((row, i) => {
+      const c0 = String(row[0] || '');
+      if (c0.startsWith('━━')) { curSec = c0.replace(/━━/g, '').trim(); secStats[curSec] = { total: 0, done: 0 }; return; }
+      if (!row[1] || String(row[1]) === '핵심 개념 (시험 용어)' || String(row[0]) === '이론가 / 영역') return;
+      if (!curSec) return;
       secStats[curSec].total++;
-      if(clChecked[type][i+1])secStats[curSec].done++;
+      if (clChecked[type][i + 1]) secStats[curSec].done++;
     });
-    rows.forEach((row,i)=>{
-      const rowNum=i+1;const c0=String(row[0]||'');
-      if(c0.startsWith('━━')){
-        const secName=c0.replace(/━━/g,'').trim();
-        const st=secStats[secName]||{total:0,done:0};
-        const sp=st.total>0?Math.round(st.done/st.total*100):0;
-        html+=`<div class="cl-subject-header" style="background:var(--purple)">${secName}<span class="cl-subject-prog">${st.done}/${st.total} · ${sp}%</span></div>`;
+    rows.forEach((row, i) => {
+      const rowNum = i + 1; const c0 = String(row[0] || '');
+      if (c0.startsWith('━━')) {
+        const secName = c0.replace(/━━/g, '').trim();
+        const st = secStats[secName] || { total: 0, done: 0 };
+        const sp = st.total > 0 ? Math.round(st.done / st.total * 100) : 0;
+        const color = (type === 'edu') ? 'var(--accent)' : 'var(--purple)'; // 교육학은 엑센트색으로 구분
+        html += `<div class="cl-subject-header" style="background:${color}">${secName}<span class="cl-subject-prog">${st.done}/${st.total} · ${sp}%</span></div>`;
         return;
       }
-      if(!row[1]||String(row[1])==='핵심 개념 (시험 용어)'||String(row[0])==='이론가 / 영역')return;
-      const checked=clChecked[type][rowNum]||false;
-      html+=`<div class="cl-item ${checked?'checked':''}">
-        <button class="cl-check ${checked?'on':''}" onclick="toggleCheck('${type}',${rowNum},${checked})">✓</button>
-        <div class="cl-info">
-          <div class="cl-name"><span style="color:var(--accent);font-weight:700;font-size:11px">${String(row[0]||'')}</span><br>${String(row[1])}</div>
-          <div class="cl-meta"><span class="cl-stars">${String(row[2]||'')}</span>${row[3]?`<span class="cl-count">${row[3]}회</span>`:''}</div>
-        </div>
-      </div>`;
+      if (!row[1] || String(row[1]) === '핵심 개념 (시험 용어)' || String(row[0]) === '이론가 / 영역') return;
+      const checked = clChecked[type][rowNum] || false;
+      html += renderCheckItem(type, rowNum, row, checked);
     });
   }
+  document.getElementById('panel-checklist').innerHTML = html;
+}
+
+// 아이템 렌더링을 위한 보조 함수 (코드 중복 방지)
+function renderCheckItem(type, rowNum, row, checked) {
+  return `<div class="cl-item ${checked ? 'checked' : ''}">
+    <button class="cl-check ${checked ? 'on' : ''}" onclick="toggleCheck('${type}',${rowNum},${checked})">✓</button>
+    <div class="cl-info">
+      <div class="cl-name"><span style="color:var(--accent);font-weight:700;font-size:11px">${String(row[0] || '')}</span><br>${String(row[1])}</div>
+      <div class="cl-meta"><span class="cl-stars">${String(row[2] || '')}</span>${row[3] ? `<span class="cl-count">${row[3]}회</span>` : ''}</div>
+    </div>
+  </div>`;
+}
   document.getElementById('panel-checklist').innerHTML=html;
 }
 
